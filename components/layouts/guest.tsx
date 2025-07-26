@@ -1,6 +1,5 @@
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
-import { H1 } from "~/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const GuestLayout = ({ children }: { children: React.ReactNode }) => {
@@ -15,13 +14,22 @@ const GuestLayout = ({ children }: { children: React.ReactNode }) => {
 }
 GuestLayout.displayName = "GuestLayout";
 
-const GuestHeader = ({ children }: { children: React.ReactNode }) => {
+const GuestHeading = ({ children }: { children: React.ReactNode }) => {
     return (
-        <H1 className="mb-4 text-center">
+        <Text className="text-3xl font-semibold mb-4 text-center">
             {children}
-        </H1>
+        </Text>
     )
 }
-GuestHeader.displayName = "GuestHeader";
+GuestHeading.displayName = "GuestHeading";
 
-export { GuestLayout, GuestHeader }
+const GuestSubHeading = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Text className="text-lg text-muted-foreground mb-4 text-center">
+            {children}
+        </Text>
+    )
+}
+GuestSubHeading.displayName = "GuestSubHeading";
+
+export { GuestLayout, GuestHeading, GuestSubHeading };
