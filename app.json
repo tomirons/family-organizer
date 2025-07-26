@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.bytemelabs.nestly",
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
