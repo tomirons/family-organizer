@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
+import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 
@@ -45,10 +46,32 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Stack />
+      <AuthenticationProvider>
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+        <Screens />
+      </AuthenticationProvider>
     </ThemeProvider>
   );
+}
+
+function Screens() {
+  const { isAuthenticated } = useAuthenticationContext();
+
+  return (
+    <>
+      <Stack>
+        <Stack.Protected guard={!isAuthenticated}>
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack.Protected>
+
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </>
+  )
 }
 
 const useIsomorphicLayoutEffect =
