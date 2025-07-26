@@ -28,7 +28,7 @@ function ErrorMessage({ className, ...props }: ErrorMessageProps) {
   return (
     <FormikErrorMessage
       className={cn(
-        "text-error-600 dark:text-error-500",
+        "mt-1 text-red-600 dark:text-red-500",
         className,
       )}
       component={Text}
