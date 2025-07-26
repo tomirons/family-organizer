@@ -1,15 +1,16 @@
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardFooter } from "~/components/ui/card";
-import { Text } from "~/components/ui/text"
-import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { Formik } from "formik";
-import axios from "~/lib/axios";
 import * as Device from 'expo-device';
-import { ErrorMessage, Input } from "~/components/ui/input";
+import { Link } from "expo-router";
+import { Formik } from "formik";
+import { View } from "react-native";
 import * as Yup from 'yup';
 import { GuestHeading, GuestLayout, GuestSubHeading } from "~/components/layouts/guest";
-import { View } from "react-native";
-import { Link } from "expo-router";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardFooter } from "~/components/ui/card";
+import { ErrorMessage, Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { useAuthenticationContext } from "~/contexts/authentication-context";
+import axios from "~/lib/axios";
+import { handleFormValidation } from '~/lib/form';
 
 export default function LoginScreen() {
     const { login } = useAuthenticationContext();
@@ -26,14 +27,14 @@ export default function LoginScreen() {
             <Formik
                 initialValues={{
                     email: 'test@example.com',
-                    password: 'password'
+                    password: 'passwor'
                 }}
-                onSubmit={(values) => {
+                onSubmit={(values, formikHelpers) => {
                     axios.post('/login', { ...values, device_name: Device.deviceName })
                         .then(response => {
                             login(response.data.data.token);
                         })
-                        .catch(console.log)
+                        .catch((error) => handleFormValidation(error, formikHelpers));
                 }}
                 validationSchema={validationSchema}
             >

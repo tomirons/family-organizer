@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { GuestHeading, GuestLayout, GuestSubHeading } from "~/components/layouts/guest";
 import { View } from "react-native";
 import { Link } from "expo-router";
+import { handleFormValidation } from "~/lib/form";
 
 export default function LoginScreen() {
     const { login } = useAuthenticationContext();
@@ -31,9 +32,14 @@ export default function LoginScreen() {
                     password: 'password',
                     password_confirmation: 'password'
                 }}
-                onSubmit={(values) => {
+                onSubmit={(values, formikHelpers) => {
                     console.log(values);
                     
+                    axios.post('/register', { ...values })
+                        .then(response => {
+                            login(response.data.data.token);
+                        })
+                        .catch((error) => handleFormValidation(error, formikHelpers));
                 }}
                 validationSchema={validationSchema}
             >
