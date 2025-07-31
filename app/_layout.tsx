@@ -7,6 +7,8 @@ import { Platform } from 'react-native';
 import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
+import { Toaster } from 'sonner-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -46,10 +48,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <AuthenticationProvider>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        <Screens />
-      </AuthenticationProvider>
+      <GestureHandlerRootView>
+        <AuthenticationProvider>
+          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+          <Screens />
+
+          <Toaster />
+        </AuthenticationProvider>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
