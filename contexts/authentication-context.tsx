@@ -7,6 +7,8 @@ interface User {
     id: string;
     email: string;
     name: string;
+    is_onboarded: boolean;
+    households: any[]
 }
 
 interface AuthenticationContextType {
