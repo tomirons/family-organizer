@@ -55,7 +55,7 @@ export default function RootLayout() {
 }
 
 function Screens() {
-  const { isAuthenticated } = useAuthenticationContext();
+  const { isAuthenticated, user } = useAuthenticationContext();
 
   return (
     <>
@@ -64,7 +64,12 @@ function Screens() {
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="register" options={{ headerShown: false }} />
         </Stack.Protected>
+
         <Stack.Protected guard={isAuthenticated}>
+          <Stack.Protected guard={!user?.is_onboarded}>
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          </Stack.Protected>
+
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>
 
