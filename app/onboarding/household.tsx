@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
 });
 
-export default function OnboardingStepOne() {
+export default function OnboardingStepTwo() {
     return (
         <SafeAreaView className="px-6 flex-1 gap-y-16">
             <View className="items-center mt-24 gap-y-4">
@@ -38,7 +38,7 @@ export default function OnboardingStepOne() {
                         axios
                             .post('/households', values)
                             .then(() => {
-                                // router.push('/onboarding/household');
+                                router.push('/onboarding/members');
                             })
                             .catch((error) => handleFormValidation(error, formikHelpers));
                     }}
