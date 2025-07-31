@@ -11,6 +11,7 @@ import { View } from "react-native";
 import { Link } from "expo-router";
 import { handleFormValidation } from "~/lib/form";
 import * as Device from 'expo-device';
+import { Label } from "~/components/ui/label";
 
 export default function LoginScreen() {
     const { login } = useAuthenticationContext();
@@ -46,26 +47,26 @@ export default function LoginScreen() {
                     <Card className="pt-6">
                         <CardContent className="gap-y-4">
                             <View>
-                                <Text>Name</Text>
-                                <Input onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} />
+                                <Label nativeID="name">Name</Label>
+                                <Input nativeID="name" className="mt-1" onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} />
                                 <ErrorMessage name="name" />
                             </View>
 
                             <View>
-                                <Text>Email</Text>
-                                <Input onChangeText={handleChange('email')} onBlur={handleBlur('email')} value={values.email} />
+                                <Label nativeID="email">Email</Label>
+                                <Input nativeID="email" className="mt-1" onChangeText={handleChange('email')} onBlur={handleBlur('email')} value={values.email} />
                                 <ErrorMessage name="email" />
                             </View>
 
                             <View>
-                                <Text>Password</Text>
-                                <Input onChangeText={handleChange('password')} onBlur={handleBlur('password')} value={values.password} secureTextEntry />
+                                <Label nativeID="password">Password</Label>
+                                <Input nativeID="password" className="mt-1" onChangeText={handleChange('password')} onBlur={handleBlur('password')} value={values.password} secureTextEntry />
                                 <ErrorMessage name="password" />
                             </View>
 
                             <View>
-                                <Text>Confirm Password</Text>
-                                <Input onChangeText={handleChange('password_confirmation')} onBlur={handleBlur('password_confirmation')} value={values.password_confirmation} secureTextEntry />
+                                <Label nativeID="password_confirmation">Confirm Password</Label>
+                                <Input nativeID="password_confirmation" className="mt-1" onChangeText={handleChange('password_confirmation')} onBlur={handleBlur('password_confirmation')} value={values.password_confirmation} secureTextEntry />
                                 <ErrorMessage name="password_confirmation" />
                             </View>
                         </CardContent>

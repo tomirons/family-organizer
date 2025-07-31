@@ -7,6 +7,7 @@ import { GuestHeading, GuestLayout, GuestSubHeading } from "~/components/layouts
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import { ErrorMessage, Input } from "~/components/ui/input";
+import { Label } from '~/components/ui/label';
 import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import axios from "~/lib/axios";
@@ -42,14 +43,14 @@ export default function LoginScreen() {
                     <Card className="pt-6">
                         <CardContent className="gap-y-4">
                             <View>
-                                <Text>Email</Text>
-                                <Input onChangeText={handleChange('email')} onBlur={handleBlur('email')} value={values.email} />
+                                <Label nativeID='email'>Email</Label>
+                                <Input nativeID='email' className='mt-1' onChangeText={handleChange('email')} onBlur={handleBlur('email')} value={values.email} />
                                 <ErrorMessage name="email" />
                             </View>
 
                             <View>
-                                <Text>Password</Text>
-                                <Input onChangeText={handleChange('password')} onBlur={handleBlur('password')} value={values.password} secureTextEntry />
+                                <Label nativeID='password'>Password</Label>
+                                <Input nativeID='password' className='mt-1' onChangeText={handleChange('password')} onBlur={handleBlur('password')} value={values.password} secureTextEntry />
                                 <ErrorMessage name="password" />
                             </View>
                         </CardContent>
