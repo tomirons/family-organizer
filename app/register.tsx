@@ -10,6 +10,7 @@ import { GuestHeading, GuestLayout, GuestSubHeading } from "~/components/layouts
 import { View } from "react-native";
 import { Link } from "expo-router";
 import { handleFormValidation } from "~/lib/form";
+import * as Device from 'expo-device';
 
 export default function LoginScreen() {
     const { login } = useAuthenticationContext();
@@ -33,9 +34,7 @@ export default function LoginScreen() {
                     password_confirmation: 'password'
                 }}
                 onSubmit={(values, formikHelpers) => {
-                    console.log(values);
-                    
-                    axios.post('/register', { ...values })
+                    axios.post('/register', { ...values, device_name: Device.deviceName })
                         .then(response => {
                             login(response.data.data.token);
                         })

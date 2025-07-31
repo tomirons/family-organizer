@@ -27,7 +27,7 @@ export default function LoginScreen() {
             <Formik
                 initialValues={{
                     email: 'test@example.com',
-                    password: 'passwor'
+                    password: 'password'
                 }}
                 onSubmit={(values, formikHelpers) => {
                     axios.post('/login', { ...values, device_name: Device.deviceName })
