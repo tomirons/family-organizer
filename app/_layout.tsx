@@ -3,12 +3,13 @@ import { Theme, ThemeProvider, DefaultTheme, DarkTheme } from '@react-navigation
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { AppState, AppStateStatus, Platform } from 'react-native';
 import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Toaster } from 'sonner-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SWRConfig } from 'swr';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -47,16 +48,47 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <GestureHandlerRootView>
-        <AuthenticationProvider>
-          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-          <Screens />
+    <SWRConfig
+      value={{
+        provider: () => new Map(),
+        isVisible: () => true,
+        initFocus(callback) {
+          let appState = AppState.currentState;
 
-          <Toaster />
-        </AuthenticationProvider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+          const onAppStateChange = (nextAppState: AppStateStatus) => {
+            /* If it's resuming from background or inactive mode to active one */
+            if (
+              appState.match(/inactive|background/) &&
+              nextAppState === "active"
+            ) {
+              callback();
+            }
+            appState = nextAppState;
+          };
+
+          // Subscribe to the app state change events
+          const subscription = AppState.addEventListener(
+            "change",
+            onAppStateChange,
+          );
+
+          return () => {
+            subscription.remove();
+          };
+        },
+      }}
+    >
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <GestureHandlerRootView>
+          <AuthenticationProvider>
+            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+            <Screens />
+
+            <Toaster />
+          </AuthenticationProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </SWRConfig>
   );
 }
 
