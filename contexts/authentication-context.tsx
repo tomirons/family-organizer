@@ -1,6 +1,6 @@
 import axios from '~/lib/axios';
 import * as SecureStore from 'expo-secure-store';
-import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import useSWR from "swr";
 
 interface User {
@@ -16,6 +16,9 @@ interface AuthenticationContextType {
     isAuthenticated: boolean;
     login: (token: string) => void;
     logout: () => void;
+    isInOnboardingFlow: boolean;
+    completeOnboardingFlow: () => void;
+    shouldShowOnboarding: boolean;
 }
 
 const AuthenticationContext = createContext<AuthenticationContextType | undefined>(undefined);
@@ -25,6 +28,9 @@ interface AuthenticationProviderProps {
 }
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
+    const [sessionOnboardingComplete, setSessionOnboardingComplete] = useState(false);
+    const [hasStartedFlow, setHasStartedFlow] = useState(false);
+    
     const {
         data: user,
         isLoading,
@@ -64,6 +70,24 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     };
 
     const isAuthenticated = !isLoading && !error && user !== undefined;
+    
+    // Determine if we should show onboarding
+    const shouldShowOnboarding = !!(user && !user.is_onboarded && !sessionOnboardingComplete);
+    
+    // Auto-start onboarding flow when needed
+    useEffect(() => {
+        if (shouldShowOnboarding && !hasStartedFlow) {
+            setHasStartedFlow(true);
+        }
+    }, [shouldShowOnboarding, hasStartedFlow]);
+    
+    // Check if we're currently in the onboarding flow
+    const isInOnboardingFlow = hasStartedFlow && !sessionOnboardingComplete;
+    
+    const completeOnboardingFlow = () => {
+        setSessionOnboardingComplete(true);
+        setHasStartedFlow(false);
+    };
 
     // Let's attempt to retrieve the token when the provider mounts.
     useEffect(() => {
@@ -79,6 +103,9 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
         isAuthenticated,
         login,
         logout,
+        isInOnboardingFlow,
+        completeOnboardingFlow,
+        shouldShowOnboarding,
     };
 
     return (

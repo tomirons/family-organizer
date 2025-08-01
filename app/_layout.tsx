@@ -93,7 +93,7 @@ export default function RootLayout() {
 }
 
 function Screens() {
-  const { isAuthenticated, user } = useAuthenticationContext();
+  const { isAuthenticated, shouldShowOnboarding, isInOnboardingFlow } = useAuthenticationContext();
 
   return (
     <>
@@ -104,7 +104,7 @@ function Screens() {
         </Stack.Protected>
 
         <Stack.Protected guard={isAuthenticated}>
-          <Stack.Protected guard={!user?.is_onboarded}>
+          <Stack.Protected guard={shouldShowOnboarding || isInOnboardingFlow}>
             <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           </Stack.Protected>
 
