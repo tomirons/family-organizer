@@ -9,6 +9,7 @@ export default function Layout() {
             }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="household" />
+            <Stack.Screen name="members" />
         </Stack>
     )
 }
