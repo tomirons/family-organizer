@@ -13,7 +13,6 @@ import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { isEmpty } from "lodash";
 import { toast } from "sonner-native";
-import { useState } from "react";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 
 const validationSchema = Yup.object().shape({
@@ -23,7 +22,6 @@ const validationSchema = Yup.object().shape({
 
 export default function OnboardingStepThree() {
     const { household } = useLocalSearchParams<{ household: string }>();
-    const [hasAddedMembers, setHasAddedMembers] = useState(false);
     const { completeOnboardingFlow } = useAuthenticationContext();
 
     return (
@@ -48,7 +46,6 @@ export default function OnboardingStepThree() {
                         .post(`/households/${household}/members`, values)
                         .then(() => {
                             toast.success('Member added successfully');
-                            setHasAddedMembers(true);
                             formikHelpers.resetForm();
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
@@ -83,7 +80,7 @@ export default function OnboardingStepThree() {
                                 completeOnboardingFlow();
                                 router.replace('/');
                             }}>
-                                <Text>{hasAddedMembers ? 'Continue' : 'Skip'}</Text>
+                                <Text>Continue</Text>
                             </Button>
                         </View>
                     </View>
