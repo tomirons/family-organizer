@@ -11,7 +11,9 @@ import {
 } from 'react-native-calendars';
 import { Theme } from 'react-native-calendars/src/types';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import useSWR from 'swr';
 import { useThemeColor } from '~/hooks/useThemeColor';
+import axios from '~/lib/axios';
 import { useColorScheme } from '~/lib/useColorScheme';
 
 const EVENT_COLOR = '#e6add8';
@@ -145,6 +147,10 @@ export default function TimelineCalendarScreen() {
   const eventsByDate = groupBy(timelineEvents, e => CalendarUtils.getCalendarDateString(e.start)) as {
     [key: string]: TimelineEventProps[];
   }
+
+  const { data } = useSWR('/households/1/events', (url) => axios.get(url).then(res => res.data));
+
+  // console.log(JSON.stringify(data, null, 2));
 
   const calendarTheme: Theme = {
     calendarBackground: useThemeColor('background'),
