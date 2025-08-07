@@ -1,15 +1,15 @@
-import '../global.css'
-import { Theme, ThemeProvider, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AppState, AppStateStatus, Platform } from 'react-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Toaster } from 'sonner-native';
+import { SWRConfig } from 'swr';
 import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
-import { Toaster } from 'sonner-native';
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SWRConfig } from 'swr';
+import '../global.css';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -22,7 +22,7 @@ const DARK_THEME: Theme = {
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router';
 
 export default function RootLayout() {
