@@ -1,18 +1,26 @@
-import axios from '~/lib/axios';
 import * as SecureStore from 'expo-secure-store';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import useSWR from "swr";
+import axios from '~/lib/axios';
+
+interface Household {
+    id: string;
+    name: string;
+    // Add other household properties as needed
+}
 
 interface User {
     id: string;
     email: string;
     name: string;
     is_onboarded: boolean;
-    households: any[]
+    households: Household[]
+    household: Household | null;
 }
 
 interface AuthenticationContextType {
     user: User | null;
+    household: Household | null;
     isAuthenticated: boolean;
     login: (token: string) => void;
     logout: () => void;
@@ -30,7 +38,7 @@ interface AuthenticationProviderProps {
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
     const [sessionOnboardingComplete, setSessionOnboardingComplete] = useState(false);
     const [hasStartedFlow, setHasStartedFlow] = useState(false);
-    
+
     const {
         data: user,
         isLoading,
@@ -70,20 +78,20 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     };
 
     const isAuthenticated = !isLoading && !error && user !== undefined;
-    
+
     // Determine if we should show onboarding
     const shouldShowOnboarding = !!(user && !user.is_onboarded && !sessionOnboardingComplete);
-    
+
     // Auto-start onboarding flow when needed
     useEffect(() => {
         if (shouldShowOnboarding && !hasStartedFlow) {
             setHasStartedFlow(true);
         }
     }, [shouldShowOnboarding, hasStartedFlow]);
-    
+
     // Check if we're currently in the onboarding flow
     const isInOnboardingFlow = hasStartedFlow && !sessionOnboardingComplete;
-    
+
     const completeOnboardingFlow = () => {
         setSessionOnboardingComplete(true);
         setHasStartedFlow(false);
@@ -100,6 +108,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
 
     const value: AuthenticationContextType = {
         user,
+        household: user?.household,
         isAuthenticated,
         login,
         logout,
