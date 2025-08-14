@@ -36,6 +36,7 @@ interface AuthenticationProviderProps {
 }
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
+    const [household, setHousehold] = useState<Household | null>(null);
     const [sessionOnboardingComplete, setSessionOnboardingComplete] = useState(false);
     const [hasStartedFlow, setHasStartedFlow] = useState(false);
 
@@ -106,9 +107,15 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
         });
     }, [setBearerToken]);
 
+    useEffect(() => {
+        if (user?.household) {
+            setHousehold(user.household);
+        }
+    }, [user]);
+
     const value: AuthenticationContextType = {
         user,
-        household: user?.household,
+        household,
         isAuthenticated,
         login,
         logout,
