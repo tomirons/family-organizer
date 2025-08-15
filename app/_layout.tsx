@@ -109,6 +109,8 @@ function Screens() {
           </Stack.Protected>
 
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="household/change" options={{ headerShown: false, presentation: 'modal' }} />
+          <Stack.Screen name="household/create" options={{ headerShown: false, presentation: 'modal' }} />
         </Stack.Protected>
 
         <Stack.Screen name="+not-found" />
