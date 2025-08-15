@@ -21,6 +21,7 @@ interface User {
 interface AuthenticationContextType {
     user: User | null;
     household: Household | null;
+    households: Household[];
     isAuthenticated: boolean;
     login: (token: string) => void;
     logout: () => void;
@@ -37,6 +38,7 @@ interface AuthenticationProviderProps {
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
     const [household, setHousehold] = useState<Household | null>(null);
+    const [households, setHouseholds] = useState<Household[]>([]);
     const [sessionOnboardingComplete, setSessionOnboardingComplete] = useState(false);
     const [hasStartedFlow, setHasStartedFlow] = useState(false);
 
@@ -48,7 +50,14 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     } = useSWR("/user", (url) =>
         axios
             .get(url)
-            .then((res) => res.data.data)
+            .then((res) => {
+                const data = res.data.data;
+
+                setHousehold(data.household);
+                setHouseholds(data.households);
+
+                return data;
+            })
             .catch((error) => {
                 if (error.response.status !== 409) throw error;
             }),
@@ -107,15 +116,10 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
         });
     }, [setBearerToken]);
 
-    useEffect(() => {
-        if (user?.household) {
-            setHousehold(user.household);
-        }
-    }, [user]);
-
     const value: AuthenticationContextType = {
         user,
         household,
+        households,
         isAuthenticated,
         login,
         logout,
