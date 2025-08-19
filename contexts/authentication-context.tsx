@@ -24,6 +24,7 @@ interface AuthenticationContextType {
     household: Household | null;
     households: Household[];
     isAuthenticated: boolean;
+    mutate: () => void;
     login: (token: string) => void;
     logout: () => void;
     isInOnboardingFlow: boolean;
@@ -123,6 +124,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
         household,
         households,
         isAuthenticated,
+        mutate,
         login,
         logout,
         isInOnboardingFlow,
