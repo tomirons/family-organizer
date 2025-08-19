@@ -6,6 +6,7 @@ import axios from '~/lib/axios';
 interface Household {
     id: string;
     name: string;
+    avatar_url: string;
     // Add other household properties as needed
 }
 
@@ -28,6 +29,7 @@ interface AuthenticationContextType {
     isInOnboardingFlow: boolean;
     completeOnboardingFlow: () => void;
     shouldShowOnboarding: boolean;
+    setHousehold: (household: Household | null) => void;
 }
 
 const AuthenticationContext = createContext<AuthenticationContextType | undefined>(undefined);
@@ -126,6 +128,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
         isInOnboardingFlow,
         completeOnboardingFlow,
         shouldShowOnboarding,
+        setHousehold,
     };
 
     return (
