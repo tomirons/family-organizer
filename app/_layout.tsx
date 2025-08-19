@@ -10,6 +10,7 @@ import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/aut
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import '../global.css';
+import { DeviceType } from 'expo-device';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -84,7 +85,9 @@ export default function RootLayout() {
             <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
             <Screens />
 
-            <Toaster />
+            <Toaster
+              style={{ marginHorizontal: 'auto', width: DeviceType.TABLET ? 500 : '100%' }}
+            />
           </AuthenticationProvider>
         </GestureHandlerRootView>
       </ThemeProvider>
