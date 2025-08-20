@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import { Label } from "~/components/ui/label";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { router } from "expo-router";
+import { toast } from "sonner-native";
 
 export default function ChangeHouseholdModal() {
     const { mutate } = useAuthenticationContext();
@@ -28,6 +29,8 @@ export default function ChangeHouseholdModal() {
                     axios
                         .post('/households', values)
                         .then((r) => {
+                            toast.success("Household successfully created");
+                
                             mutate();
 
                             router.back();
