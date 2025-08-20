@@ -6,18 +6,14 @@ import { H3 } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
-import * as Yup from 'yup';
 import { Label } from "~/components/ui/label";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { router } from "expo-router";
 import { toast } from "sonner-native";
+import { createHouseholdSchema } from "~/lib/validation";
 
 export default function ChangeHouseholdModal() {
     const { mutate } = useAuthenticationContext();
-
-    const validationSchema = Yup.object().shape({
-        name: Yup.string().required().label('Name'),
-    });
 
     return (
         <View className="p-4 gap-y-4">
@@ -37,7 +33,7 @@ export default function ChangeHouseholdModal() {
                         })
                         .catch((error) => handleFormValidation(error, formikHelpers));
                 }}
-                validationSchema={validationSchema}
+                validationSchema={createHouseholdSchema}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="gap-y-4">

@@ -8,17 +8,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Label } from "~/components/ui/label";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { Formik } from "formik";
-import * as Yup from 'yup';
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { isEmpty } from "lodash";
 import { toast } from "sonner-native";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-
-const validationSchema = Yup.object().shape({
-    name: Yup.string().required().label('Name'),
-    email: Yup.string().email().nullable().label('Email'),
-});
+import { createHouseholdMemberSchema } from "~/lib/validation";
 
 export default function OnboardingStepThree() {
     const { household } = useLocalSearchParams<{ household: string }>();
@@ -50,7 +45,7 @@ export default function OnboardingStepThree() {
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
                 }}
-                validationSchema={validationSchema}
+                validationSchema={createHouseholdMemberSchema}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="flex-1 justify-between">

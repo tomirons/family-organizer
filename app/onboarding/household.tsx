@@ -5,16 +5,12 @@ import { Text } from "~/components/ui/text";
 import { H1, P } from "~/components/ui/typography";
 import { Image } from "expo-image";
 import { Formik } from "formik";
-import * as Yup from 'yup';
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { router } from "expo-router";
-
-const validationSchema = Yup.object().shape({
-    name: Yup.string().required().label('Name'),
-});
+import { createHouseholdSchema } from "~/lib/validation";
 
 export default function OnboardingStepTwo() {
     return (
@@ -44,7 +40,7 @@ export default function OnboardingStepTwo() {
                         })
                         .catch((error) => handleFormValidation(error, formikHelpers));
                 }}
-                validationSchema={validationSchema}
+                validationSchema={createHouseholdSchema}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="flex-1 justify-between">
