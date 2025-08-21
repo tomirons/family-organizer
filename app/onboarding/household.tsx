@@ -11,8 +11,11 @@ import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { router } from "expo-router";
 import { createHouseholdSchema } from "~/lib/validation";
+import { useAuthenticationContext } from "~/contexts/authentication-context";
 
 export default function OnboardingStepTwo() {
+    const { mutate } = useAuthenticationContext();
+
     return (
         <SafeAreaView className="px-6 flex-1 gap-y-8">
             <View className="items-center mt-12 gap-y-4">
@@ -32,7 +35,8 @@ export default function OnboardingStepTwo() {
                 onSubmit={(values, formikHelpers) => {
                     axios
                         .post('/households', values)
-                        .then((r) => {                            
+                        .then((r) => {
+                            mutate();
                             router.navigate({
                                 pathname: '/onboarding/members',
                                 params: { household: r.data.data.id }
