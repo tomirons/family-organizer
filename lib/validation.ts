@@ -11,4 +11,5 @@ export const updateHouseholdSchema = Yup.object().shape({
 export const createHouseholdMemberSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
     email: Yup.string().email().nullable().label('Email'),
+    is_owner: Yup.boolean().label('Is Owner'),
 });
