@@ -45,10 +45,10 @@ export default function OnboardingStepThree() {
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
                 }}
-                validationSchema={createHouseholdMemberSchema}
+                validationSchema={createHouseholdMemberSchema.pick(['name', 'email'])}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
-                    <View className="flex-1 justify-between">
+                    <View className="flex-1 justify-between max-w-[500px] mx-auto">
                         <View className="gap-y-4">
                             <P className="text-lg">
                                 {"Let's round up the gang that makes your home hum! Pop in the names of your humans, furry friends, or even that plant you talk to. The more, the merrier—who's up first?"}

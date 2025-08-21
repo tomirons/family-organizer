@@ -3,8 +3,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { H1, P } from "~/components/ui/typography";
-import { Image } from "expo-image";
 import { router } from "expo-router";
+import { Image } from "~/components/image";
 
 export default function OnboardingStepOne() {
     return (
@@ -19,7 +19,7 @@ export default function OnboardingStepOne() {
                 contentFit="contain"
             />
 
-            <View className="flex-1 justify-between">
+            <View className="flex-1 justify-between max-w-[500px] mx-auto">
                 <P className="text-lg">
                     {"Welcome to your new home command center! This app is your trusty sidekick for keeping life organized and stress-free. Buckle up for a quick setup, and let’s make your household shine brighter than a disco ball!"}
                 </P>

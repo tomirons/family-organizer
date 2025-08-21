@@ -43,7 +43,7 @@ export default function OnboardingStepTwo() {
                 validationSchema={createHouseholdSchema}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
-                    <View className="flex-1 justify-between">
+                    <View className="flex-1 justify-between max-w-[500px] mx-auto">
                         <View className="gap-y-4">
                             <P className="text-lg">
                                 Every great household needs a iconic name! Is yours <Text className="text-lg font-semibold">The Glitter Palace</Text> or <Text className="text-lg font-semibold">Couch Potato HQ</Text>? Give it a title that screams <Text className="italic text-lg font-semibold">us</Text> and sets the tone for fun. What name&apos;s calling your heart?
