@@ -20,13 +20,13 @@ import { DeviceType } from 'expo-device';
 import colors from 'tailwindcss/colors'
 import { useAuthenticationContext } from '~/contexts/authentication-context';
 
-export default function TimelineCalendarScreen() {
+export default function CalendarTab() {
   const { household } = useAuthenticationContext();
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
   const { colorScheme, isDarkColorScheme } = useColorScheme();
 
-  const { data } = useSWR(
+  const { data, isLoading } = useSWR(
     `/households/${household?.id}/events`,
     (url) => axios.get(url).then(res => res.data.data)
   );
@@ -80,6 +80,10 @@ export default function TimelineCalendarScreen() {
       color: useThemeColor('foreground')
     }
   };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <SafeAreaView className='flex-1' edges={['top', 'left', 'right']}>
