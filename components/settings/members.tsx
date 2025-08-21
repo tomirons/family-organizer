@@ -1,8 +1,5 @@
 import { TouchableOpacity, View } from "react-native";
-import useSWR from "swr";
 import { Text } from "~/components/ui/text";
-import { useAuthenticationContext } from "~/contexts/authentication-context";
-import axios from "~/lib/axios";
 import { Badge } from "../ui/badge";
 import Icon from "../ui/icon";
 import { byPrefixAndName } from "@awesome.me/kit-5314873f9e/icons";
@@ -10,13 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { router } from "expo-router";
 import { HouseholdMember } from "~/types/household";
+import { useHouseholdMembers } from "~/hooks/household";
 
 export default function MembersSettings() {
-    const { household } = useAuthenticationContext();
-    const { data: members, isLoading } = useSWR(
-        `/households/${household?.id}/members`,
-        (url) => axios.get(url).then((res) => res.data.data)
-    );
+    const { data: members, isLoading } = useHouseholdMembers();
 
     if (isLoading) {
         return null;

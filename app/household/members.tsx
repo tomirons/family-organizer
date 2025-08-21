@@ -3,7 +3,6 @@ import { Formik } from "formik";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { toast } from "sonner-native";
-import { useSWRConfig } from "swr";
 import { Button } from "~/components/ui/button";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -11,13 +10,14 @@ import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { H2, Muted } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
+import { useHouseholdMembers } from "~/hooks/household";
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { createHouseholdMemberSchema } from "~/lib/validation";
 
 export default function Members() {
-    const { mutate } = useSWRConfig();
     const { household } = useAuthenticationContext();
+    const { mutate } = useHouseholdMembers();
     
     return (
         <View className="p-4 gap-y-4">
@@ -34,7 +34,7 @@ export default function Members() {
                     axios
                         .post(url, values)
                         .then(() => {
-                            mutate(url);
+                            mutate();
                             toast.success('Member added successfully');
                             router.back();
                         })
