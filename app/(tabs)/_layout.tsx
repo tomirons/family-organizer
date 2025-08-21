@@ -1,10 +1,10 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons'
 import { Colors } from '~/constants/Colors';
 import { useColorScheme } from '~/hooks/useColorScheme';
+import Icon from '~/components/ui/icon';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -27,15 +27,15 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <FontAwesomeIcon size={20} icon={byPrefixAndName.fal['calendar']} color={color} />,
+          title: 'Calendar',
+          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['calendar']} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="settings"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <FontAwesomeIcon size={20} icon={byPrefixAndName.faes['smile']} color={color} />,
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['circle-user']} color={color} />,
         }}
       />
     </Tabs>
