@@ -1,3 +1,4 @@
+import { FormikValues } from "formik";
 import useSWR from "swr";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import axios from "~/lib/axios";
@@ -12,3 +13,5 @@ export const useHouseholdMembers = () => {
 
     return { data, isLoading, mutate };
 }
+
+export const createHouseholdMember = (household: string, values: FormikValues) => axios.post(`/households/${household}/members`, values)

@@ -8,12 +8,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Label } from "~/components/ui/label";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { Formik } from "formik";
-import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { isEmpty } from "lodash";
 import { toast } from "sonner-native";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { createHouseholdMemberSchema } from "~/lib/validation";
+import { createHouseholdMember } from "~/hooks/household";
 
 export default function OnboardingStepThree() {
     const { household } = useLocalSearchParams<{ household: string }>();
@@ -36,14 +36,13 @@ export default function OnboardingStepThree() {
                     name: undefined,
                     email: undefined,
                 }}
-                onSubmit={(values, formikHelpers) => {                    
-                    axios
-                        .post(`/households/${household}/members`, values)
+                onSubmit={(values, formikHelpers) => {
+                    createHouseholdMember(household, values)
                         .then(() => {
                             toast.success('Member added successfully');
                             formikHelpers.resetForm();
                         })
-                        .catch(error => handleFormValidation(error, formikHelpers));
+                        .catch(error => handleFormValidation(error, formikHelpers))
                 }}
                 validationSchema={createHouseholdMemberSchema.pick(['name', 'email'])}
             >
