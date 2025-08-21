@@ -11,6 +11,7 @@ import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import '../global.css';
 import { DeviceType } from 'expo-device';
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -79,18 +80,20 @@ export default function RootLayout() {
         },
       }}
     >
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <GestureHandlerRootView>
-          <AuthenticationProvider>
-            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-            <Screens />
+      <KeyboardProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <GestureHandlerRootView>
+            <AuthenticationProvider>
+              <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+              <Screens />
 
-            <Toaster
-              style={{ marginHorizontal: 'auto', width: DeviceType.TABLET ? 500 : '100%' }}
-            />
-          </AuthenticationProvider>
-        </GestureHandlerRootView>
-      </ThemeProvider>
+              <Toaster
+                style={{ marginHorizontal: 'auto', width: DeviceType.TABLET ? 500 : '100%' }}
+              />
+            </AuthenticationProvider>
+          </GestureHandlerRootView>
+        </ThemeProvider>
+      </KeyboardProvider>
     </SWRConfig>
   );
 }
@@ -114,6 +117,7 @@ function Screens() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="household/change" options={{ headerShown: false, presentation: 'modal' }} />
           <Stack.Screen name="household/create" options={{ headerShown: false, presentation: 'modal' }} />
+          <Stack.Screen name="household/members" options={{ headerShown: false, presentation: 'formSheet' }} />
         </Stack.Protected>
 
         <Stack.Screen name="+not-found" />
