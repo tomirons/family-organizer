@@ -2,13 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import useSWR from "swr";
 import axios from '~/lib/axios';
-
-interface Household {
-    id: string;
-    name: string;
-    avatar_url: string;
-    // Add other household properties as needed
-}
+import { Household } from '~/types/household';
 
 interface User {
     id: string;
