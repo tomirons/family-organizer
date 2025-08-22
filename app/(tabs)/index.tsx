@@ -15,10 +15,9 @@ import useSWR from 'swr';
 import { useThemeColor } from '~/hooks/useThemeColor';
 import axios from '~/lib/axios';
 import { useColorScheme } from '~/lib/useColorScheme';
-import * as Device from 'expo-device';
-import { DeviceType } from 'expo-device';
 import colors from 'tailwindcss/colors'
 import { useAuthenticationContext } from '~/contexts/authentication-context';
+import { isTablet } from '~/hooks/useDevice';
 
 export default function CalendarTab() {
   const { household } = useAuthenticationContext();
@@ -91,7 +90,7 @@ export default function CalendarTab() {
         date={startOfWeek(Date(), { weekStartsOn: 1 }).toDateString()}
         disabledOpacity={0.6}
         todayBottomMargin={insets.bottom}
-        numberOfDays={Device.deviceType === DeviceType.TABLET ? 7 : 1}
+        numberOfDays={isTablet ? 7 : 1}
         style={{
           paddingBottom: tabBarHeight,
         }}

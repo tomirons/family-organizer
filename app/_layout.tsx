@@ -10,8 +10,8 @@ import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/aut
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import '../global.css';
-import { DeviceType } from 'expo-device';
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { isTablet } from '~/hooks/useDevice';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -88,7 +88,7 @@ export default function RootLayout() {
               <Screens />
 
               <Toaster
-                style={{ marginHorizontal: 'auto', width: DeviceType.TABLET ? 500 : '100%' }}
+                style={{ marginHorizontal: 'auto', width: isTablet ? 500 : '100%' }}
               />
             </AuthenticationProvider>
           </GestureHandlerRootView>
