@@ -12,6 +12,7 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import '../global.css';
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { isTablet } from '~/hooks/useDevice';
+import { PortalHost } from '@rn-primitives/portal';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -90,6 +91,7 @@ export default function RootLayout() {
               <Toaster
                 style={{ marginHorizontal: 'auto', width: isTablet ? 500 : '100%' }}
               />
+              <PortalHost />
             </AuthenticationProvider>
           </GestureHandlerRootView>
         </ThemeProvider>
