@@ -15,3 +15,5 @@ export const useHouseholdMembers = () => {
 }
 
 export const createHouseholdMember = (household: string, values: FormikValues) => axios.post(`/households/${household}/members`, values)
+
+export const updateHouseholdMember = (household: string, member: string, values: FormikValues) => axios.put(`/households/${household}/members/${member}`, values)
