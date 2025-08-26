@@ -10,3 +10,10 @@ export interface HouseholdMember {
     email: string;
     is_owner: boolean;
 }
+
+export const EmptyHouseholdMember: HouseholdMember = {
+    id: '',
+    name: '',
+    email: '',
+    is_owner: false
+};
