@@ -1,5 +1,6 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { toast } from "sonner-native";
@@ -10,13 +11,30 @@ import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { H2, Muted } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { createHouseholdMember, useHouseholdMembers } from "~/hooks/household";
+import { createHouseholdMember, updateHouseholdMember, useHouseholdMembers } from "~/hooks/household";
+import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { createHouseholdMemberSchema } from "~/lib/validation";
+import { EmptyHouseholdMember, HouseholdMember } from "~/types/household";
 
 export default function Members() {
     const { household } = useAuthenticationContext();
     const { mutate } = useHouseholdMembers();
+    const { id } = useLocalSearchParams();
+    const [member, setMember] = useState<HouseholdMember>(EmptyHouseholdMember);
+
+    const isCreating = !id;
+
+    useEffect(() => {
+        if (!id) return;
+
+        axios.get(`/households/${household?.id}/members/${id}`)
+            .then(response => {
+                setMember(response.data.data);
+            })
+            .catch(() => toast.error("Failed to load member"));
+
+    }, [id, household])
 
     if (!household) {
         return null
@@ -24,18 +42,23 @@ export default function Members() {
 
     return (
         <View className="p-4 gap-y-4">
-            <H2>Add Member</H2>
+            <H2>{isCreating ? 'Add Member' : 'Edit Member'}</H2>
             <Formik
+                enableReinitialize
                 initialValues={{
-                    name: undefined,
-                    email: undefined,
-                    is_owner: false
+                    name: member.name,
+                    email: member.email,
+                    is_owner: member.is_owner
                 }}
                 onSubmit={(values, formikHelpers) => {
-                    createHouseholdMember(household.id, values)
+                    (
+                        isCreating
+                            ? createHouseholdMember(household.id, values)
+                            : updateHouseholdMember(household.id, member.id, values)
+                    )
                         .then(() => {
                             mutate();
-                            toast.success('Member added successfully');
+                            toast.success(`${isCreating ? 'Member added successfully' : 'Member updated successfully'}`);
                             router.back();
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
