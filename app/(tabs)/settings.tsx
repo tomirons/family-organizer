@@ -41,10 +41,8 @@ export default function SettingsTab() {
 
         <FlatList
           data={sections}
-          numColumns={2}
           className="h-full"
           contentContainerClassName="gap-4"
-          columnWrapperClassName="gap-4"
           renderItem={({ item }) => item.content}
         >
 
