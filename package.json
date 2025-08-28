@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@awesome.me/kit-5314873f9e": "^1.0.25",
+    "@date-fns/utc": "^2.1.1",
     "@expo/vector-icons": "^14.1.0",
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
