@@ -3,7 +3,7 @@ import { Text } from "../ui/text";
 
 export default function NotificationsSettings() {
     return (
-        <Card className="flex-1">
+        <Card>
             <CardHeader>
                 <CardTitle>Notifications</CardTitle>
             </CardHeader>
