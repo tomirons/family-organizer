@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Icon from '~/components/ui/icon';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
+import { UTCDate } from '@date-fns/utc';
 
 type DateRange = {
     start: Date;
@@ -130,7 +131,7 @@ export default function MealsTab() {
                             )}
                         >
                             <View className='flex-row justify-between items-center mb-4'>
-                                <H4>{format(new Date(date), 'EEEE, MMMM d')}</H4>
+                                <H4>{format(new UTCDate(date), 'EEEE, MMMM d')}</H4>
                                 <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
                                     <Icon size={10} icon={byPrefixAndName.fal['plus']} />
                                 </Button>
