@@ -24,6 +24,7 @@ export default function PasswordSettings() {
                 axios.put('/settings/password', values)
                     .then(() => {
                         toast.success('Password updated successfully');
+                        formikHelpers.resetForm();
                     })
                     .catch(error => handleFormValidation(error, formikHelpers));
             }}
