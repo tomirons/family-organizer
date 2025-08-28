@@ -55,7 +55,7 @@ export default function PasswordSettings() {
                         </View>
                     </CardContent>
 
-                    <CardFooter className="justify-end gap-x-2">
+                    <CardFooter className="justify-end gap-x-4">
                         <Button variant={'secondary'} onPress={() => resetForm()}>
                             <Text>Reset</Text>
                         </Button>
