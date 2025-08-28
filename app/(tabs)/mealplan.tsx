@@ -15,11 +15,13 @@ import colors from 'tailwindcss/colors';
 import { useColorScheme } from '~/lib/useColorScheme';
 import useSWR from 'swr';
 import { useAuthenticationContext } from '~/contexts/authentication-context';
-import Animated, { 
-    FadeInDown, 
+import Animated, {
+    FadeInDown,
     FadeInUp,
     FadeOutDown
 } from 'react-native-reanimated';
+import Icon from '~/components/ui/icon';
+import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
 
 type DateRange = {
     start: Date;
@@ -82,7 +84,7 @@ export default function MealsTab() {
     const useTwoColumnLayout = isTablet && !isLandscape;
 
     const groupedData = groupBy(data, 'date');
-    
+
     const AnimatedCard = Animated.createAnimatedComponent(Card);
     const AnimatedText = Animated.createAnimatedComponent(Large);
 
@@ -92,7 +94,7 @@ export default function MealsTab() {
                 <Button className='rounded-full' variant="secondary" size="icon" onPress={() => goToPreviousWeek()}>
                     <Ionicons name="chevron-back" size={20} color="#374151" />
                 </Button>
-                <AnimatedText 
+                <AnimatedText
                     key={`${dateRange.start.getTime()}-${dateRange.end.getTime()}`}
                     entering={FadeInUp.duration(300).springify()}
                     exiting={FadeOutDown.duration(200)}
@@ -127,7 +129,12 @@ export default function MealsTab() {
                                 useTwoColumnLayout && 'w-[48.65%] mb-8'
                             )}
                         >
-                            <H4 className='mb-4'>{format(new Date(date), 'EEEE, MMMM d')}</H4>
+                            <View className='flex-row justify-between items-center mb-4'>
+                                <H4>{format(new Date(date), 'EEEE, MMMM d')}</H4>
+                                <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
+                                    <Icon size={10} icon={byPrefixAndName.fal['plus']} />
+                                </Button>
+                            </View>
                             <View className={cn('gap-y-4', useHorizontalLayout && 'flex-1 pb-4')}>
                                 {items.map((item: Meal, index) => (
                                     <AnimatedCard
