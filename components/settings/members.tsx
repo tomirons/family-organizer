@@ -43,7 +43,7 @@ export default function MembersSettings() {
     }
 
     return (
-        <Card className="flex-1">
+        <Card>
             <CardHeader>
                 <CardTitle>Members</CardTitle>
             </CardHeader>
