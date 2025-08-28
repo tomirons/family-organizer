@@ -87,7 +87,7 @@ export default function MealsTab() {
     const AnimatedText = Animated.createAnimatedComponent(Large);
 
     return (
-        <SafeAreaView className={`h-full pt-6`} edges={['top', 'left', 'right']}>
+        <SafeAreaView className={`flex-1 pt-6`} edges={['top', 'left', 'right']}>
             <View className='flex-row justify-between border-b border-border pb-4 px-6'>
                 <Button className='rounded-full' variant="secondary" size="icon" onPress={() => goToPreviousWeek()}>
                     <Ionicons name="chevron-back" size={20} color="#374151" />
