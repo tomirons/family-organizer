@@ -16,7 +16,7 @@ export default function SettingsTab() {
   const sections = [
     { id: 'account', title: 'Account', content: <AccountSettings /> },
     { id: 'password', title: 'Password', content: <PasswordSettings /> },
-    { id: 'notifications', title: 'Notifications', content: <NotificationsSettings /> },
+    // { id: 'notifications', title: 'Notifications', content: <NotificationsSettings /> },
     { id: 'members', title: 'Members', content: <MembersSettings /> },
   ]
 
