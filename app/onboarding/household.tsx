@@ -11,22 +11,13 @@ import { handleFormValidation } from "~/lib/form";
 import { router } from "expo-router";
 import { createHouseholdSchema } from "~/lib/validation";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function OnboardingStepTwo() {
     const { mutate } = useAuthenticationContext();
 
     return (
         <SafeAreaView className="px-6 flex-1 gap-y-8">
-            <View className="items-center mt-12 gap-y-4">
-                <Text variant={'h1'}>Name Your Household</Text>
-            </View>
-
-            <Image
-                style={{ width: '100%', height: 200 }}
-                source={require("~/assets/images/onboarding/step-2.png")}
-                contentFit="contain"
-            />
-
             <Formik
                 initialValues={{
                     name: "My Household",
@@ -46,7 +37,16 @@ export default function OnboardingStepTwo() {
                 validationSchema={createHouseholdSchema}
             >
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
-                    <View className="flex-1 justify-between max-w-[500px] mx-auto">
+                    <KeyboardAwareScrollView className="max-w-[500px] mx-auto" contentContainerClassName="flex-1">
+                        <View className="items-center mt-12 gap-y-4">
+                            <Text variant={'h1'}>Name Your Household</Text>
+                        </View>
+
+                        <Image
+                            style={{ width: '100%', height: 200 }}
+                            source={require("~/assets/images/onboarding/step-2.png")}
+                            contentFit="contain"
+                        />
                         <View className="gap-y-4">
                             <Text variant={'p'} className="text-lg">
                                 Every great household needs a iconic name! Is yours <Text className="text-lg font-semibold">The Glitter Palace</Text> or <Text className="text-lg font-semibold">Couch Potato HQ</Text>? Give it a title that screams <Text className="italic text-lg font-semibold">us</Text> and sets the tone for fun. What name&apos;s calling your heart?
@@ -59,10 +59,10 @@ export default function OnboardingStepTwo() {
                             </View>
                         </View>
 
-                        <Button onPress={() => handleSubmit()}>
+                        <Button className="mt-auto" onPress={() => handleSubmit()}>
                             <Text>Continue</Text>
                         </Button>
-                    </View>
+                    </KeyboardAwareScrollView>
                 )}
             </Formik>
         </SafeAreaView>
