@@ -13,8 +13,12 @@ export default function ChangeHouseholdModal() {
     const { households, setHousehold } = useAuthenticationContext();
 
     return (
-        <View className="flex-1 p-4">
-            <View className="flex-row justify-between items-center pb-2 border-b border-border">
+        <ScrollView
+            className="m-4"
+            contentContainerClassName="gap-y-4"
+            stickyHeaderIndices={[0]}
+        >
+            <View className="bg-background flex-row justify-between items-center pb-2 border-b border-border">
                 <Text variant={'h3'}>
                     Select Household
                 </Text>
@@ -22,33 +26,30 @@ export default function ChangeHouseholdModal() {
                     <Text>Create</Text>
                 </Button>
             </View>
+            {households.map((household) => (
+                <TouchableOpacity className="flex-1" key={household.id} activeOpacity={0.5} onPress={() => {
+                    setHousehold(household);
 
-            <ScrollView className="flex-1 pt-4" contentContainerClassName="gap-y-4">
-                {households.map((household) => (
-                    <TouchableOpacity key={household.id} activeOpacity={0.5} onPress={() => {
-                        setHousehold(household);
+                    axios.post('/settings/household', { id: household.id })
+                        .then(() => {
+                            toast.success(`Switched to ${household.name}`);
 
-                        axios.post('/settings/household', { id: household.id })
-                            .then(() => {
-                                toast.success(`Switched to ${household.name}`);
-
-                                router.back();
-                            })
-                            .catch(() => {
-                                toast.error("Failed to switch household. Please try again.");
-                            });
-                    }}>
-                        <Card>
-                            <CardHeader className="flex-row items-center gap-x-4">
-                                <Avatar className="size-10" alt={"Household Avatar"}>
-                                    <AvatarImage source={{ uri: household?.avatar_url }} />
-                                </Avatar>
-                                <CardTitle className="text-lg">{household.name}</CardTitle>
-                            </CardHeader>
-                        </Card>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View>
+                            router.back();
+                        })
+                        .catch(() => {
+                            toast.error("Failed to switch household. Please try again.");
+                        });
+                }}>
+                    <Card>
+                        <CardHeader className="flex-row items-center gap-x-4">
+                            <Avatar className="size-10" alt={"Household Avatar"}>
+                                <AvatarImage source={{ uri: household?.avatar_url }} />
+                            </Avatar>
+                            <CardTitle className="text-lg">{household.name}</CardTitle>
+                        </CardHeader>
+                    </Card>
+                </TouchableOpacity>
+            ))}
+        </ScrollView>
     );
 }
