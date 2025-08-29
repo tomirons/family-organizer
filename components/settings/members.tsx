@@ -45,7 +45,7 @@ export default function MembersSettings() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Members</CardTitle>
+                <CardTitle variant={'h3'}>Members</CardTitle>
             </CardHeader>
 
             <CardContent>

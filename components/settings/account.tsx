@@ -35,7 +35,7 @@ export default function AccountSettings() {
             {({ values, handleSubmit, handleChange, handleBlur, resetForm }) => (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Account</CardTitle>
+                        <CardTitle variant={'h3'}>Account</CardTitle>
                     </CardHeader>
 
                     <CardContent className="gap-y-4">

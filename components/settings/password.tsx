@@ -33,7 +33,7 @@ export default function PasswordSettings() {
             {({ values, handleSubmit, handleChange, handleBlur, resetForm }) => (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Password</CardTitle>
+                        <CardTitle variant={'h3'}>Password</CardTitle>
                     </CardHeader>
 
                     <CardContent className="gap-y-4">

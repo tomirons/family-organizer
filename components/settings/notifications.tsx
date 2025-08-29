@@ -5,7 +5,7 @@ export default function NotificationsSettings() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Notifications</CardTitle>
+                <CardTitle variant={'h3'}>Notifications</CardTitle>
             </CardHeader>
 
             <CardContent>
