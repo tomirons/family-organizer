@@ -9,6 +9,8 @@ import PasswordSettings from "~/components/settings/password";
 import NotificationsSettings from "~/components/settings/notifications";
 import MembersSettings from "~/components/settings/members";
 import { Text } from "~/components/ui/text";
+import { cn } from "~/lib/utils";
+import { isTablet } from "~/hooks/useDevice";
 
 export default function SettingsTab() {
   const { user, household } = useAuthenticationContext();
@@ -21,7 +23,7 @@ export default function SettingsTab() {
   ]
 
   return (
-    <SafeAreaView className="flex-1 pt-10" edges={['top', 'left', 'right']}>
+    <SafeAreaView className={cn("flex-1", isTablet && "pt-6")} edges={['top', 'left', 'right']}>
       <View className="flex-row items-center justify-between border-b border-border pb-4 px-6">
         <Text variant={'h2'} className="border-0">{user?.name}</Text>
         <Link href="/household/change" asChild>
