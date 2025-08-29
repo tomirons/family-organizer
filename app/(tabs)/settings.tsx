@@ -26,7 +26,7 @@ export default function SettingsTab() {
         <Text variant={'h2'} className="border-0">{user?.name}</Text>
         <Link href="/household/change" asChild>
           <TouchableOpacity activeOpacity={0.5}>
-            <Card className="shadow-none">
+            <Card className="shadow-none py-0">
               <CardHeader className="flex-row items-center gap-x-2 px-3 py-2">
                 <Avatar className="size-7" alt={"Household Avatar"}>
                   <AvatarImage source={{ uri: household?.avatar_url }} />
