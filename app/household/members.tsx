@@ -9,7 +9,6 @@ import { ErrorMessage, Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
-import { H2, Muted } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { createHouseholdMember, updateHouseholdMember, useHouseholdMembers } from "~/hooks/household";
 import axios from "~/lib/axios";
@@ -41,8 +40,8 @@ export default function Members() {
     }
 
     return (
-        <View className="p-4 gap-y-4">
-            <H2>{isCreating ? 'Add Member' : 'Edit Member'}</H2>
+        <View className="flex-1 p-4 gap-y-4">
+            <Text variant={'h2'}>{isCreating ? 'Add Member' : 'Edit Member'}</Text>
             <Formik
                 enableReinitialize
                 initialValues={{
@@ -66,30 +65,34 @@ export default function Members() {
                 validationSchema={createHouseholdMemberSchema}
             >
                 {({ values, handleSubmit, handleBlur, handleChange, setFieldValue }) => (
-                    <KeyboardAwareScrollView className="flex-1">
-                        <View className="gap-y-4">
-                            <View>
-                                <Label nativeID="name">Name</Label>
-                                <Input nativeID="name" className="mt-1" placeholder="Name" value={values.name} onBlur={handleBlur('name')} onChangeText={handleChange('name')} />
-                                <ErrorMessage name="name" />
-                            </View>
-                            <View>
-                                <Label nativeID="email">Email</Label>
-                                <Input nativeID="email" className="mt-1" placeholder="Email" value={values.email} onBlur={handleBlur('email')} onChangeText={handleChange('email')} />
-                                <ErrorMessage name="email" />
-                            </View>
-                            {values.email && (
+                    <View className="flex-1 justify-between">
+                        <KeyboardAwareScrollView>
+                            <View className="gap-y-4">
                                 <View>
-                                    <Label nativeID="is_owner" className="mb-1">Owner</Label>
-                                    <Switch nativeID="is_owner" checked={values.is_owner} onCheckedChange={(value) => setFieldValue('is_owner', value)}></Switch>
-                                    <ErrorMessage name="is_owner" />
-                                    <Muted className="mt-1">When enabled, this member will be able to manage the household.</Muted>
+                                    <Label nativeID="name">Name</Label>
+                                    <Input nativeID="name" className="mt-1" placeholder="Name" value={values.name} onBlur={handleBlur('name')} onChangeText={handleChange('name')} />
+                                    <ErrorMessage name="name" />
                                 </View>
-                            )}
+                                <View>
+                                    <Label nativeID="email">Email</Label>
+                                    <Input nativeID="email" className="mt-1" placeholder="Email" value={values.email} onBlur={handleBlur('email')} onChangeText={handleChange('email')} />
+                                    <ErrorMessage name="email" />
+                                </View>
+                                {values.email && (
+                                    <View>
+                                        <Label nativeID="is_owner" className="mb-1">Owner</Label>
+                                        <Switch nativeID="is_owner" checked={values.is_owner} onCheckedChange={(value) => setFieldValue('is_owner', value)}></Switch>
+                                        <ErrorMessage name="is_owner" />
+                                        <Text variant={'muted'} className="mt-1">When enabled, this member will be able to manage the household.</Text>
+                                    </View>
+                                )}
+                            </View>
+                        </KeyboardAwareScrollView>
+                        <View className="gap-y-4">
                             <Button onPress={() => handleSubmit()}><Text>Submit</Text></Button>
                             <Button variant="secondary" onPress={() => router.back()}><Text>Cancel</Text></Button>
                         </View>
-                    </KeyboardAwareScrollView>
+                    </View>
                 )}
             </Formik>
         </View>
