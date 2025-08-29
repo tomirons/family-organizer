@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { H4, Large } from "~/components/ui/typography";
 import { Button } from '~/components/ui/button';
 import { addWeeks, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
+import { UTCDate } from '@date-fns/utc';
 import axios from '~/lib/axios';
 import { groupBy, map } from 'lodash';
 import { Card, CardHeader, CardTitle } from '~/components/ui/card';
@@ -22,7 +23,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import Icon from '~/components/ui/icon';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
-import { UTCDate } from '@date-fns/utc';
 
 type DateRange = {
     start: Date;
