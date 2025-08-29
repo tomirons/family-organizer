@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { H4, Large } from "~/components/ui/typography";
 import { Button } from '~/components/ui/button';
 import { addWeeks, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
@@ -22,6 +21,7 @@ import Animated, {
     FadeOutDown
 } from 'react-native-reanimated';
 import Icon from '~/components/ui/icon';
+import { Text } from '~/components/ui/text';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
 
 type DateRange = {
@@ -87,9 +87,9 @@ export default function MealsTab() {
     const groupedData = groupBy(data, 'date');
 
     const AnimatedCard = Animated.createAnimatedComponent(Card);
-    const AnimatedText = Animated.createAnimatedComponent(Large);
+    const AnimatedText = Animated.createAnimatedComponent(Text);
 
-    return (
+        return (
         <SafeAreaView className={`flex-1 pt-6`} edges={['top', 'left', 'right']}>
             <View className='flex-row justify-between border-b border-border pb-4 px-6'>
                 <Button className='rounded-full' variant="secondary" size="icon" onPress={() => goToPreviousWeek()}>
@@ -100,6 +100,7 @@ export default function MealsTab() {
                     entering={FadeInUp.duration(300).springify()}
                     exiting={FadeOutDown.duration(200)}
                     className='text-2xl'
+                    variant={'large'}
                 >
                     {format(dateRange.start, 'MMM d')} - {format(dateRange.end, 'MMM d')}
                 </AnimatedText>
@@ -131,7 +132,7 @@ export default function MealsTab() {
                             )}
                         >
                             <View className='flex-row justify-between items-center mb-4'>
-                                <H4>{format(new UTCDate(date), 'EEEE, MMMM d')}</H4>
+                                <Text variant={'h4'}>{format(new UTCDate(date), 'EEEE, MMMM d')}</Text>
                                 <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
                                     <Icon size={10} icon={byPrefixAndName.fal['plus']} />
                                 </Button>
@@ -144,7 +145,7 @@ export default function MealsTab() {
                                             .springify()
                                             .damping(15)
                                             .stiffness(100)}
-                                        className='flex-1'
+                                        className='flex-1 p-0'
                                         style={{
                                             borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
                                             backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
@@ -162,5 +163,5 @@ export default function MealsTab() {
                 </View>
             </ScrollView>
         </SafeAreaView>
-    )
+        )
 }
