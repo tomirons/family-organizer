@@ -2,7 +2,6 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { H1, P } from "~/components/ui/typography";
 import { Image } from "expo-image";
 import { Formik } from "formik";
 import { ErrorMessage, Input } from "~/components/ui/input";
@@ -19,7 +18,7 @@ export default function OnboardingStepTwo() {
     return (
         <SafeAreaView className="px-6 flex-1 gap-y-8">
             <View className="items-center mt-12 gap-y-4">
-                <H1>Name Your Household</H1>
+                <Text variant={'h1'}>Name Your Household</Text>
             </View>
 
             <Image
@@ -49,9 +48,9 @@ export default function OnboardingStepTwo() {
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="flex-1 justify-between max-w-[500px] mx-auto">
                         <View className="gap-y-4">
-                            <P className="text-lg">
+                            <Text variant={'p'} className="text-lg">
                                 Every great household needs a iconic name! Is yours <Text className="text-lg font-semibold">The Glitter Palace</Text> or <Text className="text-lg font-semibold">Couch Potato HQ</Text>? Give it a title that screams <Text className="italic text-lg font-semibold">us</Text> and sets the tone for fun. What name&apos;s calling your heart?
-                            </P>
+                            </Text>
 
                             <View className="gap-y-2">
                                 <Label nativeID="name">Name</Label>

@@ -2,7 +2,6 @@ import { Formik } from "formik";
 import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { H3 } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
@@ -38,9 +37,9 @@ export default function ChangeHouseholdModal() {
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="gap-y-4">
                         <View className="flex-row justify-between items-center border-b border-border pb-2 bg-background">
-                            <H3>
+                            <Text variant={'h3'}>
                                 Create Household
-                            </H3>
+                            </Text>
                         </View>
 
                         <View className="gap-y-2">

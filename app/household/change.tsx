@@ -4,7 +4,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { H3 } from "~/components/ui/typography";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import axios from "~/lib/axios";
@@ -16,9 +15,9 @@ export default function ChangeHouseholdModal() {
     return (
         <View className="flex-1 p-4">
             <View className="flex-row justify-between items-center pb-2 border-b border-border">
-                <H3>
+                <Text variant={'h3'}>
                     Select Household
-                </H3>
+                </Text>
                 <Button onPress={() => router.push('/household/create')}>
                     <Text>Create</Text>
                 </Button>

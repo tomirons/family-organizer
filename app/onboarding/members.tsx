@@ -2,7 +2,6 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { H1, P } from "~/components/ui/typography";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { Label } from "~/components/ui/label";
@@ -22,7 +21,7 @@ export default function OnboardingStepThree() {
     return (
         <SafeAreaView className="px-6 flex-1 gap-y-8">
             <View className="items-center mt-12 gap-y-4">
-                <H1>Add Members</H1>
+                <Text variant={'h1'}>Add Members</Text>
             </View>
 
             <Image
@@ -49,9 +48,9 @@ export default function OnboardingStepThree() {
                 {({ values, handleChange, handleBlur, handleSubmit }) => (
                     <View className="flex-1 justify-between max-w-[500px] mx-auto">
                         <View className="gap-y-4">
-                            <P className="text-lg">
+                            <Text variant={'p'} className="text-lg">
                                 {"Let's round up the gang that makes your home hum! Pop in the names of your humans, furry friends, or even that plant you talk to. The more, the merrier—who's up first?"}
-                            </P>
+                            </Text>
 
                             <View className="w-full">
                                 <Label nativeID="name">Name</Label>
