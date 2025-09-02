@@ -18,7 +18,7 @@ export default function OnboardingStepOne() {
                 contentFit="contain"
             />
 
-            <View className="flex-1 justify-between max-w-[500px] mx-auto">
+            <View className="flex-1 justify-between max-w-[500px] mx-auto mb-4">
                 <Text variant={'p'} className="text-lg">
                     {"Welcome to your new home command center! This app is your trusty sidekick for keeping life organized and stress-free. Buckle up for a quick setup, and let’s make your household shine brighter than a disco ball!"}
                 </Text>
