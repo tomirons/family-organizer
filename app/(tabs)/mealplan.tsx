@@ -180,9 +180,9 @@ export default function MealsTab() {
                         useTwoColumnLayout && 'flex-row flex-wrap gap-x-6',
                         !useHorizontalLayout && !useTwoColumnLayout && 'gap-y-8'
                     )}>
-                    {map(data, (item) => (
+                    {map(data, (group) => (
                         <View
-                            key={item.date}
+                            key={group.date}
                             className={cn(
                                 useHorizontalLayout && 'h-full w-[350px]',
                                 useTwoColumnLayout && 'w-[48.65%] mb-8'
@@ -198,15 +198,15 @@ export default function MealsTab() {
                             ) : (
                                 <>
                                     <View className='flex-row justify-between items-center mb-4'>
-                                        <Text variant={'h4'}>{format(new UTCDate(item.date), 'EEEE, MMMM d')}</Text>
+                                        <Text variant={'h4'}>{format(new UTCDate(group.date), 'EEEE, MMMM d')}</Text>
                                         <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
                                             <Icon size={10} icon={byPrefixAndName.fal['plus']} />
                                         </Button>
                                     </View>
                                     <View className={cn('gap-y-4', useHorizontalLayout && 'flex-1 pb-4')}>
-                                        {isEmpty(item.items) ? (
+                                        {isEmpty(group.items) ? (
                                             <Text className='text-sm text-muted-foreground'>No meals planned</Text>
-                                        ) : item.items.map((meal: Meal, index: number) => (
+                                        ) : group.items.map((meal: Meal, index: number) => (
                                             <Card
                                                 key={meal.id}
                                                 className='flex-1 p-0'
