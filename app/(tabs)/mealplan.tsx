@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '~/components/ui/button';
 import { addWeeks, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
-import axios from '~/lib/axios';
 import { isEmpty, map } from 'lodash';
 import { Card, CardHeader, CardTitle } from '~/components/ui/card';
 import { cn } from '~/lib/utils';
@@ -12,8 +11,6 @@ import { isTablet } from '~/hooks/useDevice';
 import { useOrientation } from '~/hooks/useOrientation';
 import colors from 'tailwindcss/colors';
 import { useColorScheme } from '~/lib/useColorScheme';
-import useSWR from 'swr';
-import { useAuthenticationContext } from '~/contexts/authentication-context';
 import Icon from '~/components/ui/icon';
 import { Text } from '~/components/ui/text';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
@@ -26,6 +23,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Skeleton } from '~/components/ui/skeleton';
 import { Link } from 'expo-router';
+import { useMeals } from '~/hooks/meals';
 
 type DateRange = {
     start: Date;
@@ -33,7 +31,6 @@ type DateRange = {
 }
 
 export default function MealsTab() {
-    const { household } = useAuthenticationContext();
     const { isDarkColorScheme } = useColorScheme();
     const { isLandscape } = useOrientation();
     const [dateRange, setDateRange] = useState<DateRange>({
@@ -46,17 +43,10 @@ export default function MealsTab() {
     const headerTranslateX = useSharedValue(0);
     const opacity = useSharedValue(1);
 
-    const { data, isLoading } = useSWR(
-        [`/households/${household?.id}/meals`, dateRange],
-        ([url, dateRange]: [string, DateRange]) => axios.get(url, {
-            params: {
-                grouped: true,
-                filter: {
-                    dates: [format(dateRange.start, 'yyyy-MM-dd'), format(dateRange.end, 'yyyy-MM-dd')]
-                }
-            }
-        }).then(res => res.data.data)
-    )
+    const { data, isLoading } = useMeals({
+        range: [format(dateRange.start, 'yyyy-MM-dd'), format(dateRange.end, 'yyyy-MM-dd')],
+        grouped: true
+    });
 
     const resetAnimation = useCallback(() => {
         const direction = animationDirection === 'left' ? -1 : 1;
@@ -181,9 +171,9 @@ export default function MealsTab() {
                         useTwoColumnLayout && 'flex-row flex-wrap gap-x-6',
                         !useHorizontalLayout && !useTwoColumnLayout && 'gap-y-8'
                     )}>
-                    {map(data, (group) => (
+                    {map(data, (group, index) => (
                         <View
-                            key={group.date}
+                            key={index}
                             className={cn(
                                 useHorizontalLayout && 'h-full w-[350px]',
                                 useTwoColumnLayout && 'w-[48.65%] mb-8'
