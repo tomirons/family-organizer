@@ -25,6 +25,7 @@ import Animated, {
     Easing
 } from 'react-native-reanimated';
 import { Skeleton } from '~/components/ui/skeleton';
+import { Link } from 'expo-router';
 
 type DateRange = {
     start: Date;
@@ -199,9 +200,14 @@ export default function MealsTab() {
                                 <>
                                     <View className='flex-row justify-between items-center mb-4'>
                                         <Text variant={'h4'}>{format(new UTCDate(group.date), 'EEEE, MMMM d')}</Text>
-                                        <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
-                                            <Icon size={10} icon={byPrefixAndName.fal['plus']} />
-                                        </Button>
+                                        <Link asChild href={{
+                                            pathname: '/meals/create',
+                                            params: { date: group.date }
+                                        }}>
+                                            <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
+                                                <Icon size={10} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
+                                            </Button>
+                                        </Link>
                                     </View>
                                     <View className={cn('gap-y-4', useHorizontalLayout && 'flex-1 pb-4')}>
                                         {isEmpty(group.items) ? (
