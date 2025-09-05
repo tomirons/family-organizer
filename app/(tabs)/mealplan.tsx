@@ -1,52 +1,42 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '~/components/ui/button';
-import { addWeeks, endOfWeek, format, startOfWeek, subWeeks } from 'date-fns';
-import { UTCDate } from '@date-fns/utc';
-import { isEmpty, map } from 'lodash';
-import { Card, CardHeader, CardTitle } from '~/components/ui/card';
-import { cn } from '~/lib/utils';
-import { isTablet } from '~/hooks/useDevice';
-import { useOrientation } from '~/hooks/useOrientation';
-import colors from 'tailwindcss/colors';
-import { useColorScheme } from '~/lib/useColorScheme';
-import Icon from '~/components/ui/icon';
-import { Text } from '~/components/ui/text';
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
+import { UTCDate } from '@date-fns/utc';
+import { format } from 'date-fns';
+import { Link } from 'expo-router';
+import { isEmpty, map } from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import Animated, {
+    Easing,
+    runOnJS,
     useAnimatedStyle,
     useSharedValue,
-    withTiming,
-    runOnJS,
-    Easing
+    withTiming
 } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import colors from 'tailwindcss/colors';
+import { Button } from '~/components/ui/button';
+import { Card, CardHeader, CardTitle } from '~/components/ui/card';
+import Icon from '~/components/ui/icon';
 import { Skeleton } from '~/components/ui/skeleton';
-import { Link } from 'expo-router';
+import { Text } from '~/components/ui/text';
+import { useMealPlanContext } from '~/contexts/mealplan-context';
 import { useMeals } from '~/hooks/meals';
-
-type DateRange = {
-    start: Date;
-    end: Date;
-}
+import { isTablet } from '~/hooks/useDevice';
+import { useOrientation } from '~/hooks/useOrientation';
+import { useColorScheme } from '~/lib/useColorScheme';
+import { cn } from '~/lib/utils';
 
 export default function MealsTab() {
     const { isDarkColorScheme } = useColorScheme();
     const { isLandscape } = useOrientation();
-    const [dateRange, setDateRange] = useState<DateRange>({
-        start: startOfWeek(new Date, { weekStartsOn: 1 }),
-        end: endOfWeek(new Date, { weekStartsOn: 1 })
-    });
+    const { dateRange, goToNextWeek, goToPreviousWeek } = useMealPlanContext();
     const [animationDirection, setAnimationDirection] = useState<'left' | 'right' | null>(null);
 
     const translateX = useSharedValue(0);
     const headerTranslateX = useSharedValue(0);
     const opacity = useSharedValue(1);
 
-    const { data, isLoading } = useMeals({
-        range: [format(dateRange.start, 'yyyy-MM-dd'), format(dateRange.end, 'yyyy-MM-dd')],
-        grouped: true
-    });
+    const { data, isLoading } = useMeals();
 
     const resetAnimation = useCallback(() => {
         const direction = animationDirection === 'left' ? -1 : 1;
@@ -90,21 +80,15 @@ export default function MealsTab() {
         }
     }, [animationDirection, headerTranslateX, opacity, resetAnimation, translateX]);
 
-    const goToNextWeek = () => {
+    const handleGoToNextWeek = () => {
         setAnimationDirection('left');
-        setDateRange({
-            start: addWeeks(dateRange.start, 1),
-            end: addWeeks(dateRange.end, 1)
-        });
-    }
+        goToNextWeek();
+    };
 
-    const goToPreviousWeek = () => {
+    const handleGoToPreviousWeek = () => {
         setAnimationDirection('right');
-        setDateRange({
-            start: subWeeks(dateRange.start, 1),
-            end: subWeeks(dateRange.end, 1)
-        });
-    }
+        goToPreviousWeek();
+    };
 
     const cardColors = [
         colors.red,
@@ -140,7 +124,7 @@ export default function MealsTab() {
     return (
         <SafeAreaView className={`flex-1 pt-6`} edges={['top', 'left', 'right']}>
             <View className='flex-row justify-between border-b border-border pb-4 px-6'>
-                <Button className='rounded-full' variant="secondary" size="icon" onPress={() => goToPreviousWeek()}>
+                <Button className='rounded-full' variant="secondary" size="icon" onPress={() => handleGoToPreviousWeek()}>
                     <Icon icon={byPrefixAndName.fal['chevron-left']} size={16} className='text-secondary-foreground' />
                 </Button>
                 <Animated.View style={animatedHeaderStyle}>
@@ -152,7 +136,7 @@ export default function MealsTab() {
                         {format(dateRange.start, 'MMM d')} - {format(dateRange.end, 'MMM d')}
                     </Text>
                 </Animated.View>
-                <Button className='rounded-full' variant="secondary" size="icon" onPress={() => goToNextWeek()}>
+                <Button className='rounded-full' variant="secondary" size="icon" onPress={() => handleGoToNextWeek()}>
                     <Icon icon={byPrefixAndName.fal['chevron-right']} size={16} className='text-secondary-foreground' />
                 </Button>
             </View>
