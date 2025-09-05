@@ -1,18 +1,19 @@
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
+import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AppState, AppStateStatus, Platform } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Toaster } from 'sonner-native';
 import { SWRConfig } from 'swr';
 import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
+import { MealPlanProvider } from '~/contexts/mealplan-context';
+import { isTablet } from '~/hooks/useDevice';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import '../global.css';
-import { KeyboardProvider } from "react-native-keyboard-controller";
-import { isTablet } from '~/hooks/useDevice';
-import { PortalHost } from '@rn-primitives/portal';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -86,7 +87,10 @@ export default function RootLayout() {
           <GestureHandlerRootView>
             <AuthenticationProvider>
               <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-              <Screens />
+
+              <MealPlanProvider>
+                <Screens />
+              </MealPlanProvider>
 
               <Toaster
                 style={{ marginHorizontal: 'auto', width: isTablet ? 500 : '100%' }}
