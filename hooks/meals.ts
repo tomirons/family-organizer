@@ -1,14 +1,24 @@
+import { format } from "date-fns";
 import { FormikValues } from "formik";
 import useSWR from "swr";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
+import { DateRange, useMealPlanContext } from "~/contexts/mealplan-context";
 import axios from "~/lib/axios";
 
-export const useMeals = ({ range, grouped }: { range: string[], grouped: boolean } = { range: [], grouped: false }) => {
+export const useMeals = ({ grouped }: { grouped: boolean } = { grouped: true }) => {
     const { household } = useAuthenticationContext();
+    const { dateRange } = useMealPlanContext();
 
     return useSWR(
-        `/households/${household?.id}/meals`,
-        (url) => axios.get(url, { params: { filter: { dates: range }, grouped } }).then((res) => res.data.data)
+        [`/households/${household?.id}/meals`, dateRange],
+        ([url, dateRange]: [string, DateRange]) => axios.get(url, {
+            params: {
+                filter: {
+                    dates: [format(dateRange.start, 'yyyy-MM-dd'), format(dateRange.end, 'yyyy-MM-dd')]
+                },
+                grouped
+            }
+        }).then((res) => res.data.data)
     );
 }
 
