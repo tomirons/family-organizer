@@ -2,20 +2,21 @@ import { UTCDate } from "@date-fns/utc";
 import { format } from "date-fns";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
+import { map } from "lodash";
 import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { toast } from "sonner-native";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { ErrorMessage, Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Text } from "~/components/ui/text";
-import { map } from "lodash";
 import { SelectPicker } from "~/components/ui/select-picker";
+import { Text } from "~/components/ui/text";
 import { Textarea } from "~/components/ui/textarea";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { toast } from "sonner-native";
 import { createMeal, useMeals, useMealTypes } from "~/hooks/meals";
 import { handleFormValidation } from "~/lib/form";
+import { createMealSchema } from "~/lib/validation";
 
 export default function CreateMeal() {
     const { household } = useAuthenticationContext();
@@ -51,6 +52,7 @@ export default function CreateMeal() {
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
                 }}
+                validationSchema={createMealSchema}
             >
                 {({ values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
                     <KeyboardAvoidingView className="flex-1 gap-y-4">
@@ -67,6 +69,7 @@ export default function CreateMeal() {
                                 value={format(new UTCDate(values.date), 'EEEE, MMMM d')}
                                 editable={false}
                             />
+                            <ErrorMessage name="date" />
                         </View>
 
                         <View className="gap-y-1">
@@ -77,6 +80,7 @@ export default function CreateMeal() {
                                 onChangeText={handleChange('name')}
                                 onBlur={handleBlur('name')}
                             />
+                            <ErrorMessage name="name" />
                         </View>
 
                         <View className="gap-y-1">
@@ -87,6 +91,7 @@ export default function CreateMeal() {
                                 onValueChange={(value) => setFieldValue('type_id', value)}
                                 items={types}
                             />
+                            <ErrorMessage name="type_id" />
                         </View>
 
                         <View className="gap-y-1">
@@ -97,6 +102,7 @@ export default function CreateMeal() {
                                 onChangeText={handleChange('notes')}
                                 onBlur={handleBlur('notes')}
                             />
+                            <ErrorMessage name="notes" />
                         </View>
 
                         <Button className="mt-auto" onPress={() => handleSubmit()}>
