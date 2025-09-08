@@ -1,26 +1,31 @@
+import { byPrefixAndName } from "@awesome.me/kit-5314873f9e/icons";
 import { UTCDate } from "@date-fns/utc";
 import { format } from "date-fns";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import { map } from "lodash";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { toast } from "sonner-native";
 import { Button } from "~/components/ui/button";
+import Icon from "~/components/ui/icon";
 import { ErrorMessage, Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { SelectPicker } from "~/components/ui/select-picker";
 import { Text } from "~/components/ui/text";
 import { Textarea } from "~/components/ui/textarea";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { createMeal, useMeals, useMealTypes } from "~/hooks/meals";
+import { createMeal, showMeal, updateMeal, useMeals, useMealTypes } from "~/hooks/meals";
 import { handleFormValidation } from "~/lib/form";
 import { createMealSchema } from "~/lib/validation";
+import { EmptyMeal, Meal } from "~/types/meal";
 
-export default function CreateMeal() {
+export default function MealForm() {
+    const [meal, setMeal] = useState<Meal>(EmptyMeal);
     const { household } = useAuthenticationContext();
-    const { date } = useLocalSearchParams<{ date: string }>();
+    const { date, id } = useLocalSearchParams<{ date: string, id?: string }>();
     const { mutate } = useMeals();
 
     const { data: mealTypes, isLoading } = useMealTypes();
@@ -30,6 +35,20 @@ export default function CreateMeal() {
         value: i.id
     }));
 
+    const isCreating = !id;
+
+    useEffect(() => {
+        if (household && id) {
+            showMeal(household!.id, id!)
+                .then((res) => {
+                    setMeal(res.data.data);
+                })
+                .catch(() => {
+                    toast.error("Failed to load meal");
+                });
+        }
+    }, [household, id]);
+
     if (!household) {
         return null;
     }
@@ -37,17 +56,22 @@ export default function CreateMeal() {
     return (
         <SafeAreaView className="flex-1 p-4 gap-y-4" edges={['bottom']}>
             <Formik
+                enableReinitialize
                 initialValues={{
                     date: date,
-                    type_id: undefined,
-                    name: undefined,
-                    notes: undefined,
+                    type_id: meal.type_id,
+                    name: meal.name,
+                    notes: meal.notes,
                 }}
                 onSubmit={(values, formikHelpers) => {
-                    createMeal(household.id, values)
+                    (
+                        isCreating
+                            ? createMeal(household.id, values)
+                            : updateMeal(household.id, id, values)
+                    )
                         .then(() => {
                             mutate();
-                            toast.success(`${true ? 'Meal added successfully' : 'Meal updated successfully'}`);
+                            toast.success(`${isCreating ? 'Meal added successfully' : 'Meal updated successfully'}`);
                             router.back();
                         })
                         .catch(error => handleFormValidation(error, formikHelpers));
@@ -55,10 +79,14 @@ export default function CreateMeal() {
                 validationSchema={createMealSchema}
             >
                 {({ values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
-                    <KeyboardAvoidingView className="flex-1 gap-y-4">
+                    <KeyboardAvoidingView
+                        className="flex-1 gap-y-4"
+                        behavior="padding"
+                        keyboardVerticalOffset={100}
+                    >
                         <View className="flex-row justify-between items-center border-b border-border pb-2 bg-background">
                             <Text variant={'h3'}>
-                                Create Meal
+                                {isCreating ? 'Create Meal' : 'Edit Meal'}
                             </Text>
                         </View>
 
@@ -85,12 +113,19 @@ export default function CreateMeal() {
 
                         <View className="gap-y-1">
                             <Label nativeID="type">Type</Label>
-                            <SelectPicker
-                                placeholderLabel="Select a meal type..."
-                                disabled={isLoading}
-                                onValueChange={(value) => setFieldValue('type_id', value)}
-                                items={types}
-                            />
+                            <View className="flex-row gap-x-1">
+                                <View className="flex-1">
+                                    <SelectPicker
+                                        placeholderLabel="Select a meal type..."
+                                        disabled={isLoading}
+                                        onValueChange={(value) => setFieldValue('type_id', value)}
+                                        items={types}
+                                    />
+                                </View>
+                                <Button variant={'secondary'} size={'icon'} onPress={() => router.push('/meals/types/form')}>
+                                    <Icon size={12} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
+                                </Button>
+                            </View>
                             <ErrorMessage name="type_id" />
                         </View>
 
