@@ -59,7 +59,7 @@ export default function MealForm() {
                 enableReinitialize
                 initialValues={{
                     date: date,
-                    type_id: meal.type_id,
+                    type_id: meal.type?.id,
                     name: meal.name,
                     notes: meal.notes,
                 }}
@@ -114,14 +114,16 @@ export default function MealForm() {
                         <View className="gap-y-1">
                             <Label nativeID="type">Type</Label>
                             <View className="flex-row gap-x-1">
-                                <View className="flex-1">
-                                    <SelectPicker
-                                        placeholderLabel="Select a meal type..."
-                                        disabled={isLoading}
-                                        onValueChange={(value) => setFieldValue('type_id', value)}
-                                        items={types}
-                                    />
-                                </View>
+                                <SelectPicker
+                                    placeholderLabel="Select a meal type..."
+                                    disabled={isLoading}
+                                    value={types.find(t => t.value === values.type_id)?.value}
+                                    onValueChange={(value) => setFieldValue('type_id', value)}
+                                    items={types}
+                                    style={{
+                                        viewContainer: { flex: 1 },
+                                    }}
+                                />
                                 <Button variant={'secondary'} size={'icon'} onPress={() => router.push('/meals/types/form')}>
                                     <Icon size={12} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
                                 </Button>
