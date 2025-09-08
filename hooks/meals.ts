@@ -24,6 +24,10 @@ export const useMeals = ({ grouped }: { grouped: boolean } = { grouped: true }) 
 
 export const createMeal = (household: string, values: FormikValues) => axios.post(`/households/${household}/meals`, values);
 
+export const showMeal = (household: string, id: string) => axios.get(`/households/${household}/meals/${id}`);
+
+export const updateMeal = (household: string, id: string, values: FormikValues) => axios.put(`/households/${household}/meals/${id}`, values);
+
 export const useMealTypes = () => {
     const { household } = useAuthenticationContext();
 
