@@ -1,10 +1,10 @@
 import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
 import { UTCDate } from '@date-fns/utc';
 import { format } from 'date-fns';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { isEmpty, map } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -25,6 +25,7 @@ import { isTablet } from '~/hooks/useDevice';
 import { useOrientation } from '~/hooks/useOrientation';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { cn } from '~/lib/utils';
+import { Meal } from '~/types/meal';
 
 export default function MealsTab() {
     const { isDarkColorScheme } = useColorScheme();
@@ -98,12 +99,6 @@ export default function MealsTab() {
         colors.blue,
     ]
 
-    interface Meal {
-        id: number;
-        name: string;
-        type: string;
-    }
-
     const useHorizontalLayout = isTablet && isLandscape;
     const useTwoColumnLayout = isTablet && !isLandscape;
 
@@ -175,11 +170,11 @@ export default function MealsTab() {
                                     <View className='flex-row justify-between items-center mb-4'>
                                         <Text variant={'h4'}>{format(new UTCDate(group.date), 'EEEE, MMMM d')}</Text>
                                         <Link asChild href={{
-                                            pathname: '/meals/create',
+                                            pathname: '/meals/form',
                                             params: { date: group.date }
                                         }}>
                                             <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
-                                                <Icon size={10} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
+                                                <Icon size={12} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
                                             </Button>
                                         </Link>
                                     </View>
@@ -187,19 +182,30 @@ export default function MealsTab() {
                                         {isEmpty(group.items) ? (
                                             <Text className='text-sm text-muted-foreground'>No meals planned</Text>
                                         ) : group.items.map((meal: Meal, index: number) => (
-                                            <Card
+                                            <TouchableOpacity
+                                                className='flex-1'
                                                 key={meal.id}
-                                                className='flex-1 p-0'
-                                                style={{
-                                                    borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
-                                                    backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
-                                                }}
+                                                onPress={() => router.push({
+                                                    pathname: '/meals/form',
+                                                    params: {
+                                                        id: meal.id,
+                                                        date: group.date
+                                                    }
+                                                })}
                                             >
-                                                <CardHeader className='p-3'>
-                                                    <Text className='text-sm text-muted-foreground uppercase'>{meal.type}</Text>
-                                                    <CardTitle className='text-lg font-medium'>{meal.name}</CardTitle>
-                                                </CardHeader>
-                                            </Card>
+                                                <Card
+                                                    className='flex-1 p-0'
+                                                    style={{
+                                                        borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
+                                                        backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
+                                                    }}
+                                                >
+                                                    <CardHeader className='p-3'>
+                                                        <Text className='text-sm text-muted-foreground uppercase'>{meal.type?.name}</Text>
+                                                        <CardTitle className='text-lg font-medium'>{meal.name}</CardTitle>
+                                                    </CardHeader>
+                                                </Card>
+                                            </TouchableOpacity>
                                         ))}
                                     </View>
                                 </>
