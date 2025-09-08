@@ -19,7 +19,8 @@ function SelectPicker({ placeholderLabel, ...props }: PickerSelectProps & { plac
                 className: inputClassName,
             }}
             style={{
-                inputIOSContainer: { pointerEvents: "none" }
+                viewContainer: { flex: 1 },
+                inputIOSContainer: { pointerEvents: "none"}
             }}
             {...props}
         />
