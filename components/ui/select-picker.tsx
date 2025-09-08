@@ -3,7 +3,7 @@ import { useThemeColor } from "~/hooks/useThemeColor";
 import RNPickerSelect, { PickerSelectProps } from 'react-native-picker-select';
 import { inputClassName } from "~/components/ui/input";
 
-function SelectPicker({ placeholderLabel, ...props }: PickerSelectProps & { placeholderLabel?: string }) {
+function SelectPicker({ style, placeholderLabel, ...props }: PickerSelectProps & { placeholderLabel?: string }) {
     const { isDarkColorScheme } = useColorScheme();
     const placeHolderColor = useThemeColor('muted-foreground');
 
@@ -19,7 +19,8 @@ function SelectPicker({ placeholderLabel, ...props }: PickerSelectProps & { plac
                 className: inputClassName,
             }}
             style={{
-                inputIOSContainer: { pointerEvents: "none"}
+                inputIOSContainer: { pointerEvents: "none"},
+                ...style
             }}
             {...props}
         />
