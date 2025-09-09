@@ -1,3 +1,5 @@
+import { roundToNearestMinutes } from "date-fns";
+
 export interface Meal {
     id: string | undefined;
     name: string | undefined;
@@ -9,6 +11,7 @@ export interface Meal {
 export interface MealType {
     id: string | undefined;
     name: string | undefined;
+    time: Date | undefined;
 }
 
 export const EmptyMeal: Meal = {
@@ -17,4 +20,10 @@ export const EmptyMeal: Meal = {
     type: undefined,
     notes: undefined,
     date: new Date,
+};
+
+export const EmptyMealType: MealType = {
+    id: undefined,
+    name: undefined,
+    time: roundToNearestMinutes(new Date, { nearestTo: 15 }),
 };
