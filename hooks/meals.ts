@@ -36,3 +36,7 @@ export const useMealTypes = () => {
         (url) => axios.get(url).then((res) => res.data.data)
     );
 }
+
+export const createMealType = (householdId: string, values: FormikValues) => axios.post(`/households/${householdId}/meal-types`, values);
+
+export const updateMealType = (householdId: string, mealTypeId: string, values: FormikValues) => axios.put(`/households/${householdId}/meal-types/${mealTypeId}`, values);
