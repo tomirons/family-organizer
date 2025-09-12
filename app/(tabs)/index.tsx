@@ -183,8 +183,8 @@ export default function MealsTab() {
                                             <Text className='text-sm text-muted-foreground'>No meals planned</Text>
                                         ) : group.items.map((meal: Meal, index: number) => (
                                             <TouchableOpacity
-                                                className='flex-1'
                                                 key={meal.id}
+                                                className='flex-1'
                                                 onPress={() => router.push({
                                                     pathname: '/meals/form',
                                                     params: {
