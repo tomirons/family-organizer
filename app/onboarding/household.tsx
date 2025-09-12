@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import { createHouseholdSchema } from "~/lib/validation";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import TimezonePicker from "~/components/timezone-picker";
 
 export default function OnboardingStepTwo() {
     const { mutate } = useAuthenticationContext();
@@ -21,6 +22,7 @@ export default function OnboardingStepTwo() {
             <Formik
                 initialValues={{
                     name: "My Household",
+                    timezone: undefined,
                 }}
                 onSubmit={(values, formikHelpers) => {
                     axios
@@ -36,7 +38,7 @@ export default function OnboardingStepTwo() {
                 }}
                 validationSchema={createHouseholdSchema}
             >
-                {({ values, handleChange, handleBlur, handleSubmit }) => (
+                {({ values, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
                     <KeyboardAwareScrollView
                         className="max-w-[500px] mx-auto"
                         contentContainerClassName="flex-grow gap-y-4"
@@ -62,6 +64,12 @@ export default function OnboardingStepTwo() {
                                     <Label nativeID="name">Name</Label>
                                     <Input nativeID="name" onChangeText={handleChange("name")} onBlur={handleBlur("name")} value={values.name} />
                                     <ErrorMessage name="name" />
+                                </View>
+
+                                <View className="gap-y-2">
+                                    <Label nativeID="timezone">Timezone</Label>
+                                    <TimezonePicker onValueChange={(value) => setFieldValue("timezone", value)} />
+                                    <ErrorMessage name="timezone" />
                                 </View>
                             </View>
                         </View>
