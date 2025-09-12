@@ -2,10 +2,12 @@ import * as Yup from 'yup';
 
 export const createHouseholdSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
+    timezone: Yup.string().required().label('Timezone'),
 });
 
 export const updateHouseholdSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
+    timezone: Yup.string().required().label('Timezone'),
 });
 
 export const createHouseholdMemberSchema = Yup.object().shape({
