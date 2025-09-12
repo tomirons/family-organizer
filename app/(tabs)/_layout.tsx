@@ -15,10 +15,18 @@ export default function TabLayout() {
         headerShown: false,
       }}>
       <Tabs.Screen
-        name="mealplan"
+        name="index"
         options={{
           title: 'Meal Plan',
           tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['plate-utensils']} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          href: null, // this hides the tab for now...
+          title: 'Calendar',
+          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['calendar']} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -26,14 +34,6 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['circle-user']} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null, // this hides the tab for now...
-          title: 'Calendar',
-          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['calendar']} color={color} />,
         }}
       />
     </Tabs>
