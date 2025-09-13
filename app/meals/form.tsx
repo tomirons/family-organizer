@@ -155,9 +155,11 @@ export default function MealForm() {
                         </View>
 
                         <View className="mt-auto flex-row justify-between gap-x-2">
-                            <Button className="grow" variant={'destructive'} onPress={handleDelete}>
-                                <Text>Delete</Text>
-                            </Button>
+                            {!isCreating && (
+                                <Button className="grow" variant={'destructive'} onPress={handleDelete}>
+                                    <Text>Delete</Text>
+                                </Button>
+                            )}
                             <Button className="grow" onPress={() => handleSubmit()}>
                                 <Text>Submit</Text>
                             </Button>
