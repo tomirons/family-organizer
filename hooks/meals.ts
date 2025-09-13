@@ -28,6 +28,8 @@ export const showMeal = (household: string, id: string) => axios.get(`/household
 
 export const updateMeal = (household: string, id: string, values: FormikValues) => axios.put(`/households/${household}/meals/${id}`, values);
 
+export const deleteMeal = (household: string, id: string) => axios.delete(`/households/${household}/meals/${id}`);
+
 export const useMealTypes = () => {
     const { household } = useAuthenticationContext();
 
