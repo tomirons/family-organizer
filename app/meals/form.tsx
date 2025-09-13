@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import { map } from "lodash";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,7 +17,7 @@ import { SelectPicker } from "~/components/ui/select-picker";
 import { Text } from "~/components/ui/text";
 import { Textarea } from "~/components/ui/textarea";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { createMeal, showMeal, updateMeal, useMeals, useMealTypes } from "~/hooks/meals";
+import { createMeal, deleteMeal, showMeal, updateMeal, useMeals, useMealTypes } from "~/hooks/meals";
 import { handleFormValidation } from "~/lib/form";
 import { createMealSchema } from "~/lib/validation";
 import { EmptyMeal, Meal } from "~/types/meal";
@@ -48,6 +48,18 @@ export default function MealForm() {
                 });
         }
     }, [household, id]);
+
+    const handleDelete = useCallback(() => {
+        deleteMeal(household!.id, id!)
+            .then(() => {
+                toast.success("Meal deleted successfully");
+                mutate();
+                router.back();
+            })
+            .catch(() => {
+                toast.error("Failed to delete meal");
+            });
+    }, [household, id, mutate]);
 
     if (!household) {
         return null;
@@ -142,9 +154,14 @@ export default function MealForm() {
                             <ErrorMessage name="notes" />
                         </View>
 
-                        <Button className="mt-auto" onPress={() => handleSubmit()}>
-                            <Text>Submit</Text>
-                        </Button>
+                        <View className="mt-auto flex-row justify-between gap-x-2">
+                            <Button className="grow" variant={'destructive'} onPress={handleDelete}>
+                                <Text>Delete</Text>
+                            </Button>
+                            <Button className="grow" onPress={() => handleSubmit()}>
+                                <Text>Submit</Text>
+                            </Button>
+                        </View>
                     </KeyboardAvoidingView>
                 )}
             </Formik>
