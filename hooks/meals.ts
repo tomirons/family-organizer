@@ -39,8 +39,10 @@ export const useMealTypes = () => {
     );
 }
 
-export const createMealType = (householdId: string, values: FormikValues) => axios.post(`/households/${householdId}/meal-types`, values);
+export const createMealType = (household: string, values: FormikValues) => axios.post(`/households/${household}/meal-types`, values);
 
 export const showMealType = (household: string, id: string) => axios.get(`/households/${household}/meal-types/${id}`);
 
-export const updateMealType = (householdId: string, mealTypeId: string, values: FormikValues) => axios.put(`/households/${householdId}/meal-types/${mealTypeId}`, values);
+export const updateMealType = (household: string, id: string, values: FormikValues) => axios.put(`/households/${household}/meal-types/${id}`, values);
+
+export const deleteMealType = (household: string, id: string) => axios.delete(`/households/${household}/meal-types/${id}`);
