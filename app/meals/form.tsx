@@ -160,6 +160,11 @@ export default function MealForm() {
                                     <Text>Delete</Text>
                                 </Button>
                             )}
+                            {isCreating && (
+                                <Button className="grow" variant={'secondary'} onPress={() => router.back()}>
+                                    <Text>Cancel</Text>
+                                </Button>
+                            )}
                             <Button className="grow" onPress={() => handleSubmit()}>
                                 <Text>Submit</Text>
                             </Button>
