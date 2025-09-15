@@ -46,7 +46,7 @@ export default function MembersSettings() {
                 <CardTitle variant={'h3'}>Members</CardTitle>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="gap-y-1">
                 {members.map((member: HouseholdMember) => (
                     <View key={member.id} className="flex-row items-center justify-between">
                         <View className="flex-row">
