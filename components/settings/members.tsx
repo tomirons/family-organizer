@@ -15,8 +15,7 @@ import {
 } from '~/components/ui/alert-dialog';
 import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { useHouseholdMembers } from "~/hooks/household";
-import axios from "~/lib/axios";
+import { deleteHouseholdMember, useHouseholdMembers } from "~/hooks/household";
 import { HouseholdMember } from "~/types/household";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -32,8 +31,7 @@ export default function MembersSettings() {
     }
 
     function handleDeleteMember(id: string): void {
-        axios
-            .delete(`/households/${household?.id}/members/${id}`)
+        deleteHouseholdMember(household!.id, id)
             .then(() => {
                 toast.success("Member removed successfully");
 
