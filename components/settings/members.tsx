@@ -59,7 +59,7 @@ export default function MembersSettings() {
                         </View>
                         {user?.id !== member.id && (
                             <View className="flex-row gap-x-2">
-                                <TouchableOpacity className="p-2" onPress={() => router.push(`/household/members?id=${member.id}&member=${JSON.stringify(member)}`)}>
+                                <TouchableOpacity className="p-2" onPress={() => router.push(`/household/members?id=${member.id}`)}>
                                     <Icon size={12} className="text-secondary-foreground" icon={byPrefixAndName.fal['pencil']} />
                                 </TouchableOpacity>
                                 
