@@ -22,14 +22,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="calendar"
-        options={{
-          href: null, // this hides the tab for now...
-          title: 'Calendar',
-          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['calendar']} color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
