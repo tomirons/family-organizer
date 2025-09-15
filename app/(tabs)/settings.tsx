@@ -1,26 +1,30 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthenticationContext } from "~/contexts/authentication-context";
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
-import { FlatList, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
-import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { get } from "lodash";
+import { FlatList, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AccountSettings from "~/components/settings/account";
-import PasswordSettings from "~/components/settings/password";
-import NotificationsSettings from "~/components/settings/notifications";
+import MealTypeSettings from "~/components/settings/meal-types";
 import MembersSettings from "~/components/settings/members";
+import PasswordSettings from "~/components/settings/password";
+import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { cn } from "~/lib/utils";
+import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { isTablet } from "~/hooks/useDevice";
+import { cn } from "~/lib/utils";
 
 export default function SettingsTab() {
   const { user, household } = useAuthenticationContext();
 
+  const isOwner = get(user, 'household.is_owner');
+
   const sections = [
-    { id: 'account', title: 'Account', content: <AccountSettings /> },
-    { id: 'password', title: 'Password', content: <PasswordSettings /> },
-    // { id: 'notifications', title: 'Notifications', content: <NotificationsSettings /> },
-    { id: 'members', title: 'Members', content: <MembersSettings /> },
-  ]
+    { id: 'account', title: 'Account', content: <AccountSettings />, visible: true },
+    { id: 'password', title: 'Password', content: <PasswordSettings />, visible: true },
+    // { id: 'notifications', title: 'Notifications', content: <NotificationsSettings />, visible: true },
+    { id: 'members', title: 'Members', content: <MembersSettings />, visible: isOwner },
+    { id: 'meal-types', title: 'Meal Types', content: <MealTypeSettings />, visible: isOwner },
+  ].filter(section => section.visible);
 
   return (
     <SafeAreaView className={cn("flex-1", isTablet && "pt-6")} edges={['top', 'left', 'right']}>
