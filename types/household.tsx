@@ -2,6 +2,7 @@ export interface Household {
     id: string;
     name: string;
     avatar_url: string;
+    is_owner: boolean;
 }
 
 export interface HouseholdMember {
