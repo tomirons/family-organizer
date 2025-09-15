@@ -88,9 +88,13 @@ export default function Members() {
                                 </View>
                             )}
                         </View>
-                        <View className="gap-y-4 mt-auto">
-                            <Button onPress={() => handleSubmit()}><Text>Submit</Text></Button>
-                            <Button variant="secondary" onPress={() => router.back()}><Text>Cancel</Text></Button>
+                        <View className="flex-row gap-x-2 mt-auto">
+                            <Button className="grow" variant="secondary" onPress={() => router.back()}>
+                                <Text>Cancel</Text>
+                            </Button>
+                            <Button className="grow" onPress={() => handleSubmit()}>
+                                <Text>Submit</Text>
+                            </Button>
                         </View>
                     </KeyboardAwareScrollView>
                 )}
