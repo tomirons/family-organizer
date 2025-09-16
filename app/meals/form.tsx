@@ -100,6 +100,11 @@ export default function MealForm() {
                             <Text variant={'h3'}>
                                 {isCreating ? 'Create Meal' : 'Edit Meal'}
                             </Text>
+                            {!isCreating && (
+                                <Button size={'icon'} variant={'ghost'} onPress={handleDelete}>
+                                    <Icon size={16} icon={byPrefixAndName.fal['trash']} className='text-destructive' />
+                                </Button>
+                            )}
                         </View>
 
                         <View className="gap-y-1">
@@ -155,16 +160,9 @@ export default function MealForm() {
                         </View>
 
                         <View className="mt-auto flex-row justify-between gap-x-2">
-                            {!isCreating && (
-                                <Button className="grow" variant={'destructive'} onPress={handleDelete}>
-                                    <Text>Delete</Text>
-                                </Button>
-                            )}
-                            {isCreating && (
-                                <Button className="grow" variant={'secondary'} onPress={() => router.back()}>
-                                    <Text>Cancel</Text>
-                                </Button>
-                            )}
+                            <Button className="grow" variant={'secondary'} onPress={() => router.back()}>
+                                <Text>Cancel</Text>
+                            </Button>
                             <Button className="grow" onPress={() => handleSubmit()}>
                                 <Text>Submit</Text>
                             </Button>
