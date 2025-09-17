@@ -55,6 +55,7 @@ export default function MealsTab() {
             duration: 200,
             easing: Easing.out(Easing.ease)
         });
+        setAnimationDirection(null);
     }, [animationDirection, headerTranslateX, opacity, translateX]);
 
     useEffect(() => {
