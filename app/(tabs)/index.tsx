@@ -5,6 +5,7 @@ import { Link, router } from 'expo-router';
 import { isEmpty, map } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
     Easing,
     runOnJS,
@@ -36,6 +37,8 @@ export default function MealsTab() {
     const translateX = useSharedValue(0);
     const headerTranslateX = useSharedValue(0);
     const opacity = useSharedValue(1);
+    const gestureTranslateX = useSharedValue(0);
+    const headerGestureTranslateX = useSharedValue(0);
 
     const { data, isLoading } = useMeals();
 
@@ -55,8 +58,11 @@ export default function MealsTab() {
             duration: 200,
             easing: Easing.out(Easing.ease)
         });
+        // Reset both gesture translations when animation completes
+        gestureTranslateX.value = 0;
+        headerGestureTranslateX.value = 0;
         setAnimationDirection(null);
-    }, [animationDirection, headerTranslateX, opacity, translateX]);
+    }, [animationDirection, headerTranslateX, opacity, translateX, gestureTranslateX, headerGestureTranslateX]);
 
     useEffect(() => {
         if (animationDirection) {
@@ -103,16 +109,77 @@ export default function MealsTab() {
     const useHorizontalLayout = isTablet && isLandscape;
     const useTwoColumnLayout = isTablet && !isLandscape;
 
+    // Create pan gesture for content area
+    const createContentPanGesture = () => Gesture.Pan()
+        .onBegin(() => {
+            gestureTranslateX.value = 0;
+        })
+        .onUpdate((event) => {
+            gestureTranslateX.value = event.translationX;
+        })
+        .onEnd((event) => {
+            const swipeThreshold = 100;
+            const velocityThreshold = 500;
+            
+            const horizontalDistance = event.translationX;
+            const horizontalVelocity = event.velocityX;
+            
+            if (Math.abs(horizontalDistance) > swipeThreshold || Math.abs(horizontalVelocity) > velocityThreshold) {
+                if (horizontalDistance > 0 || horizontalVelocity > 0) {
+                    runOnJS(handleGoToPreviousWeek)();
+                } else {
+                    runOnJS(handleGoToNextWeek)();
+                }
+            } else {
+                gestureTranslateX.value = withTiming(0, {
+                    duration: 200,
+                    easing: Easing.out(Easing.ease)
+                });
+            }
+        });
+
+    // Create pan gesture for header area
+    const createHeaderPanGesture = () => Gesture.Pan()
+        .onBegin(() => {
+            headerGestureTranslateX.value = 0;
+        })
+        .onUpdate((event) => {
+            headerGestureTranslateX.value = event.translationX;
+        })
+        .onEnd((event) => {
+            const swipeThreshold = 100;
+            const velocityThreshold = 500;
+            
+            const horizontalDistance = event.translationX;
+            const horizontalVelocity = event.velocityX;
+            
+            if (Math.abs(horizontalDistance) > swipeThreshold || Math.abs(horizontalVelocity) > velocityThreshold) {
+                if (horizontalDistance > 0 || horizontalVelocity > 0) {
+                    runOnJS(handleGoToPreviousWeek)();
+                } else {
+                    runOnJS(handleGoToNextWeek)();
+                }
+            } else {
+                headerGestureTranslateX.value = withTiming(0, {
+                    duration: 200,
+                    easing: Easing.out(Easing.ease)
+                });
+            }
+        });
+
+    const panGesture = createContentPanGesture();
+    const headerPanGesture = createHeaderPanGesture();
+
     const animatedHeaderStyle = useAnimatedStyle(() => {
         return {
-            transform: [{ translateX: headerTranslateX.value }],
+            transform: [{ translateX: headerTranslateX.value + headerGestureTranslateX.value * 0.2 }],
             opacity: opacity.value
         };
     });
 
     const animatedContentStyle = useAnimatedStyle(() => {
         return {
-            transform: [{ translateX: translateX.value }],
+            transform: [{ translateX: translateX.value + gestureTranslateX.value }],
             opacity: opacity.value
         };
     });
@@ -123,96 +190,100 @@ export default function MealsTab() {
                 <Button className='rounded-full' variant="secondary" size="icon" onPress={() => handleGoToPreviousWeek()}>
                     <Icon icon={byPrefixAndName.fal['chevron-left']} size={16} className='text-secondary-foreground' />
                 </Button>
-                <Animated.View style={animatedHeaderStyle}>
-                    <Text
-                        key={`${dateRange.start.getTime()}-${dateRange.end.getTime()}`}
-                        className='text-2xl'
-                        variant={'large'}
-                    >
-                        {format(dateRange.start, 'MMM d')} - {format(dateRange.end, 'MMM d')}
-                    </Text>
-                </Animated.View>
+                <GestureDetector gesture={headerPanGesture}>
+                    <Animated.View style={animatedHeaderStyle} className="grow">
+                        <Text
+                            key={`${dateRange.start.getTime()}-${dateRange.end.getTime()}`}
+                            className='text-2xl text-center'
+                            variant={'large'}
+                        >
+                            {format(dateRange.start, 'MMM d')} - {format(dateRange.end, 'MMM d')}
+                        </Text>
+                    </Animated.View>
+                </GestureDetector>
                 <Button className='rounded-full' variant="secondary" size="icon" onPress={() => handleGoToNextWeek()}>
                     <Icon icon={byPrefixAndName.fal['chevron-right']} size={16} className='text-secondary-foreground' />
                 </Button>
             </View>
 
-            <Animated.ScrollView
-                style={animatedContentStyle}
-                horizontal={useHorizontalLayout}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                className={cn('flex-1 pt-4')}
-                contentContainerClassName={cn(
-                    'px-6',
-                    useHorizontalLayout && 'flex-row gap-x-6 h-full',
-                    useTwoColumnLayout && 'flex-row flex-wrap gap-x-6',
-                    !useHorizontalLayout && !useTwoColumnLayout && 'gap-y-8'
-                )}
-            >
-                {map(data, (group, index) => (
-                    <View
-                        key={index}
-                        className={cn(
-                            useHorizontalLayout && 'h-full w-[350px]',
-                            useTwoColumnLayout && 'w-[48.65%] mb-8'
-                        )}
-                    >
-                        {isLoading ? (
-                            <View className='gap-y-4'>
-                                <Skeleton className='h-14' />
-                                <Skeleton className='h-24' />
-                                <Skeleton className='h-24' />
-                                <Skeleton className='h-24' />
-                            </View>
-                        ) : (
-                            <>
-                                <View className='flex-row justify-between items-center mb-4'>
-                                    <Text variant={'h4'}>{format(new UTCDate(group.date), 'EEEE, MMMM d')}</Text>
-                                    <Link asChild href={{
-                                        pathname: '/meals/form',
-                                        params: { date: group.date }
-                                    }}>
-                                        <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
-                                            <Icon size={12} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
-                                        </Button>
-                                    </Link>
+            <GestureDetector gesture={panGesture}>
+                <Animated.ScrollView
+                    style={animatedContentStyle}
+                    horizontal={useHorizontalLayout}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    className={cn('flex-1 pt-4')}
+                    contentContainerClassName={cn(
+                        'px-6',
+                        useHorizontalLayout && 'flex-row gap-x-6 h-full',
+                        useTwoColumnLayout && 'flex-row flex-wrap gap-x-6',
+                        !useHorizontalLayout && !useTwoColumnLayout && 'gap-y-8'
+                    )}
+                >
+                    {map(data, (group, index) => (
+                        <View
+                            key={index}
+                            className={cn(
+                                useHorizontalLayout && 'h-full w-[350px]',
+                                useTwoColumnLayout && 'w-[48.65%] mb-8'
+                            )}
+                        >
+                            {isLoading ? (
+                                <View className='gap-y-4'>
+                                    <Skeleton className='h-14' />
+                                    <Skeleton className='h-24' />
+                                    <Skeleton className='h-24' />
+                                    <Skeleton className='h-24' />
                                 </View>
-                                <View className={cn('gap-y-4', useHorizontalLayout && 'flex-1 pb-4')}>
-                                    {isEmpty(group.items) ? (
-                                        <Text className='text-sm text-muted-foreground'>No meals planned</Text>
-                                    ) : group.items.map((meal: Meal, index: number) => (
-                                        <TouchableOpacity
-                                            key={meal.id}
-                                            className='flex-1'
-                                            onPress={() => router.push({
-                                                pathname: '/meals/form',
-                                                params: {
-                                                    id: meal.id,
-                                                    date: group.date
-                                                }
-                                            })}
-                                        >
-                                            <Card
-                                                className='flex-1 p-0'
-                                                style={{
-                                                    borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
-                                                    backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
-                                                }}
+                            ) : (
+                                <>
+                                    <View className='flex-row justify-between items-center mb-4'>
+                                        <Text variant={'h4'}>{format(new UTCDate(group.date), 'EEEE, MMMM d')}</Text>
+                                        <Link asChild href={{
+                                            pathname: '/meals/form',
+                                            params: { date: group.date }
+                                        }}>
+                                            <Button className='rounded-full size-8' variant={'secondary'} size={'icon'}>
+                                                <Icon size={12} icon={byPrefixAndName.fal['plus']} className='text-secondary-foreground' />
+                                            </Button>
+                                        </Link>
+                                    </View>
+                                    <View className={cn('gap-y-4', useHorizontalLayout && 'flex-1 pb-4')}>
+                                        {isEmpty(group.items) ? (
+                                            <Text className='text-sm text-muted-foreground'>No meals planned</Text>
+                                        ) : group.items.map((meal: Meal, index: number) => (
+                                            <TouchableOpacity
+                                                key={meal.id}
+                                                className='flex-1'
+                                                onPress={() => router.push({
+                                                    pathname: '/meals/form',
+                                                    params: {
+                                                        id: meal.id,
+                                                        date: group.date
+                                                    }
+                                                })}
                                             >
-                                                <CardHeader className='p-3'>
-                                                    <Text className='text-sm text-muted-foreground uppercase'>{meal.type?.name}</Text>
-                                                    <CardTitle className='text-lg font-medium'>{meal.name}</CardTitle>
-                                                </CardHeader>
-                                            </Card>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </>
-                        )}
-                    </View>
-                ))}
-            </Animated.ScrollView>
+                                                <Card
+                                                    className='flex-1 p-0'
+                                                    style={{
+                                                        borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
+                                                        backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
+                                                    }}
+                                                >
+                                                    <CardHeader className='p-3'>
+                                                        <Text className='text-sm text-muted-foreground uppercase'>{meal.type?.name}</Text>
+                                                        <CardTitle className='text-lg font-medium'>{meal.name}</CardTitle>
+                                                    </CardHeader>
+                                                </Card>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                </>
+                            )}
+                        </View>
+                    ))}
+                </Animated.ScrollView>
+            </GestureDetector>
         </SafeAreaView >
     )
 }
