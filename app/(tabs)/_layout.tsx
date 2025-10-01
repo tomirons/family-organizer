@@ -19,6 +19,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="lists"
+        options={{
+          title: 'Lists',
+          tabBarIcon: ({ color }) => <Icon size={20} icon={byPrefixAndName.fal['list-check']} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
