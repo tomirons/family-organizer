@@ -1,4 +1,5 @@
 import { roundToNearestMinutes } from "date-fns";
+import colors from "tailwindcss/colors";
 
 export interface Meal {
     id: string | undefined;
@@ -12,6 +13,7 @@ export interface MealType {
     id: string | undefined;
     name: string | undefined;
     time: Date | undefined;
+    color: keyof typeof colors | undefined;
 }
 
 export const EmptyMeal: Meal = {
@@ -26,4 +28,5 @@ export const EmptyMealType: MealType = {
     id: undefined,
     name: undefined,
     time: roundToNearestMinutes(new Date, { nearestTo: 15 }),
+    color: 'red',
 };
