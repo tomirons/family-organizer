@@ -21,6 +21,9 @@ import Animated, {
     FadeOut,
 } from "react-native-reanimated";
 import { createMealTypeSchema } from "~/lib/validation";
+import { SelectPicker } from "~/components/ui/select-picker";
+import { colors } from "~/lib/constants";
+import { upperFirst } from "lodash";
 
 export default function MealTypeForm() {
     const [mealType, setMealType] = useState<MealType>(EmptyMealType);
@@ -55,6 +58,7 @@ export default function MealTypeForm() {
                 initialValues={{
                     name: mealType.name,
                     time: mealType.time,
+                    color: mealType.color,
                 }}
                 onSubmit={(values, formikHelpers) => {
                     const payload = {
@@ -122,6 +126,20 @@ export default function MealTypeForm() {
                                 </Animated.View>
                             )}
                             <ErrorMessage name="time" />
+                        </View>
+
+                        <View className="gap-y-1">
+                            <Label nativeID="color">Color</Label>
+                            <SelectPicker
+                                placeholderLabel="Select a color..."
+                                value={values.color}
+                                onValueChange={(value) => setFieldValue('color', value)}
+                                items={colors.map((color) => ({
+                                    label: upperFirst(color),
+                                    value: color
+                                }))}
+                            />
+                            <ErrorMessage name="color" />
                         </View>
 
                         <Button className="mt-auto" onPress={() => handleSubmit()}>
