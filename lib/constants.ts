@@ -16,3 +16,23 @@ export const NAV_THEME = {
         text: 'hsl(0 0% 98%)', // foreground
     },
 };
+
+export const colors = [
+    'red',
+    'orange',
+    'amber',
+    'yellow',
+    'lime',
+    'green',
+    'emerald',
+    'teal',
+    'cyan',
+    'sky',
+    'blue',
+    'indigo',
+    'violet',
+    'purple',
+    'fuchsia',
+    'pink',
+    'rose',
+];
