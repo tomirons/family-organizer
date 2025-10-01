@@ -98,14 +98,6 @@ export default function MealsTab() {
         goToPreviousWeek();
     };
 
-    const cardColors = [
-        colors.red,
-        colors.orange,
-        colors.yellow,
-        colors.green,
-        colors.blue,
-    ]
-
     const useHorizontalLayout = isTablet && isLandscape;
     const useTwoColumnLayout = isTablet && !isLandscape;
 
@@ -266,8 +258,8 @@ export default function MealsTab() {
                                                 <Card
                                                     className='flex-1 p-0'
                                                     style={{
-                                                        borderColor: isDarkColorScheme ? cardColors[index % cardColors.length][900] : cardColors[index % cardColors.length][200],
-                                                        backgroundColor: isDarkColorScheme ? cardColors[index % cardColors.length][950] : cardColors[index % cardColors.length][50]
+                                                        borderColor: isDarkColorScheme ? colors[meal.type?.color!][900] : colors[meal.type?.color!][200],
+                                                        backgroundColor: isDarkColorScheme ? colors[meal.type?.color!][950] : colors[meal.type?.color!][50]
                                                     }}
                                                 >
                                                     <CardHeader className='p-3'>
