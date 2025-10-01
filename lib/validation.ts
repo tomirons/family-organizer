@@ -26,4 +26,5 @@ export const createMealSchema = Yup.object().shape({
 export const createMealTypeSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
     time: Yup.string().required().label('Time'),
+    color: Yup.string().required().label('Color'),
 });
