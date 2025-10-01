@@ -28,5 +28,5 @@ export const EmptyMealType: MealType = {
     id: undefined,
     name: undefined,
     time: roundToNearestMinutes(new Date, { nearestTo: 15 }),
-    color: 'red',
+    color: undefined,
 };
