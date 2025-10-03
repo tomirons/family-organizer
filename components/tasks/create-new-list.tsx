@@ -2,6 +2,7 @@ import { Dimensions, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { Formik } from "formik";
 
 export default function CreateNewList() {
     const width = Dimensions.get('window').width;
@@ -17,10 +18,25 @@ export default function CreateNewList() {
                 </View>
 
                 <View className="gap-y-6">
-                    <Input />
-                    <Button size={'lg'}>
-                        <Text>Create</Text>
-                    </Button>
+                    <Formik
+                        initialValues={{ name: undefined }}
+                        onSubmit={(values) => {
+                            console.log(values);
+                        }}
+                    >
+                        {({ values, handleChange, handleBlur, handleSubmit }) => (
+                            <>
+                                <Input
+                                    onBlur={handleBlur('name')}
+                                    onChangeText={handleChange('name')}
+                                    value={values.name}
+                                />
+                                <Button size={'lg'} onPress={() => handleSubmit()}>
+                                    <Text>Create</Text>
+                                </Button>
+                            </>
+                        )}
+                    </Formik>
                 </View>
             </View>
         </View>
