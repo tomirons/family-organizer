@@ -28,3 +28,9 @@ export const createMealTypeSchema = Yup.object().shape({
     time: Yup.string().required().label('Time'),
     color: Yup.string().required().label('Color'),
 });
+
+export const createTaskSchema = Yup.object().shape({
+    title: Yup.string().required().label('Title'),
+    assignee_id: Yup.string().nullable().label('Assignee'),
+    notes: Yup.string().nullable().label('Notes'),
+});
