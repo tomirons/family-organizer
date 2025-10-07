@@ -1,10 +1,14 @@
 import { Dimensions, View } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Input } from "~/components/ui/input";
+import { ErrorMessage, Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { Formik } from "formik";
+import { createList, useLists } from "~/hooks/tasks";
+import { createListSchema } from "~/lib/validation";
 
 export default function CreateNewList() {
     const width = Dimensions.get('window').width;
+    const { mutate } = useLists();
 
     return (
         <View style={{ width }} className="px-8">
@@ -17,10 +21,32 @@ export default function CreateNewList() {
                 </View>
 
                 <View className="gap-y-6">
-                    <Input />
-                    <Button size={'lg'}>
-                        <Text>Create</Text>
-                    </Button>
+                    <Formik
+                        initialValues={{ name: undefined }}
+                        onSubmit={(values) => {
+                            createList('1', values).then(() => {
+                                mutate();
+                            });
+                            console.log(values);
+                        }}
+                        validationSchema={createListSchema}
+                    >
+                        {({ values, handleChange, handleBlur, handleSubmit }) => (
+                            <>
+                                <View className="gap-y-1">
+                                    <Input
+                                        onBlur={handleBlur('name')}
+                                        onChangeText={handleChange('name')}
+                                        value={values.name}
+                                    />
+                                    <ErrorMessage name="name" />
+                                </View>
+                                <Button size={'lg'} onPress={() => handleSubmit()}>
+                                    <Text>Create</Text>
+                                </Button>
+                            </>
+                        )}
+                    </Formik>
                 </View>
             </View>
         </View>
