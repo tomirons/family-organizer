@@ -5,10 +5,16 @@ import { Button } from "~/components/ui/button";
 import { Formik } from "formik";
 import { createList, useLists } from "~/hooks/tasks";
 import { createListSchema } from "~/lib/validation";
+import { useAuthenticationContext } from "~/contexts/authentication-context";
 
 export default function CreateNewList() {
+    const { household } = useAuthenticationContext();
     const width = Dimensions.get('window').width;
     const { mutate } = useLists();
+
+    if (!household) {
+        return null;
+    }
 
     return (
         <View style={{ width }} className="px-8">
@@ -24,7 +30,7 @@ export default function CreateNewList() {
                     <Formik
                         initialValues={{ name: undefined }}
                         onSubmit={(values) => {
-                            createList('1', values).then(() => {
+                            createList(household.id, values).then(() => {
                                 mutate();
                             });
                             console.log(values);

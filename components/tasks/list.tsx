@@ -51,7 +51,7 @@ export default function TaskList({ list }: { list: any }) {
                                     checked={task.is_completed}
                                     onCheckedChange={function (checked: boolean): void {
                                         axios
-                                            .post(`households/1/lists/${list.id}/tasks/${task.id}/${checked ? 'complete' : 'incomplete'}`)
+                                            .post(`households/${household.id}/lists/${list.id}/tasks/${task.id}/${checked ? 'complete' : 'incomplete'}`)
                                             .then(() => {
                                                 toast.success(`Marked as ${checked ? 'completed' : 'incomplete'}`);
                                                 mutateLists();
