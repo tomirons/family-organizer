@@ -1,12 +1,13 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons'
+import { byPrefixAndName } from '@awesome.me/kit-5314873f9e/icons';
 import Icon from '~/components/ui/icon';
 import { useThemeColor } from '~/hooks/useThemeColor';
 
 export default function TabLayout() {
   return (
     <Tabs
+      initialRouteName="lists"
       screenOptions={{
         tabBarActiveTintColor: useThemeColor('primary'),
         headerShown: false,

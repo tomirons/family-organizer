@@ -3,12 +3,19 @@ import useSWR from "swr";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import axios from "~/lib/axios";
 
-export const useLists = () => {
+export const useLists = (includeIncomplete: boolean = true) => {
     const { household } = useAuthenticationContext();
-    
+
     return useSWR(
-        `households/${household?.id}/lists?include=tasks`,
-        (url) => axios.get(url).then((res) => res.data.data)
+        [`households/${household?.id}/lists`, includeIncomplete],
+        ([url, includeIncomplete]) => axios
+            .get(url, {
+                params: {
+                    include: 'tasks',
+                    filter: includeIncomplete ? { incomplete: true } : undefined
+                }
+            })
+            .then((res) => res.data.data)
     );
 };
 

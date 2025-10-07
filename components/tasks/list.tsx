@@ -33,8 +33,11 @@ export default function TaskList({ list }: { list: any }) {
     return (
         <View key={list.id} style={{ width }} className="p-4 gap-y-3">
             <ScrollView contentContainerClassName="gap-y-2" stickyHeaderIndices={[0]}>
-                <View className="bg-background">
+                <View className="bg-background flex-row items-center justify-between">
                     <Text variant={'h3'}>{list.name}</Text>
+                    <Button variant={'ghost'}>
+                        <Text>Show/Hide completed</Text>
+                    </Button>
                 </View>
                 {list.tasks.map((task: any) => (
                     <TouchableOpacity
