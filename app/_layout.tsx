@@ -10,6 +10,7 @@ import { Toaster } from 'sonner-native';
 import { SWRConfig } from 'swr';
 import { AuthenticationProvider, useAuthenticationContext } from '~/contexts/authentication-context';
 import { MealPlanProvider } from '~/contexts/mealplan-context';
+import { TasksProvider } from '~/contexts/tasks-context';
 import { isTablet } from '~/hooks/useDevice';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
@@ -89,7 +90,9 @@ export default function RootLayout() {
               <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
 
               <MealPlanProvider>
-                <Screens />
+                <TasksProvider>
+                  <Screens />
+                </TasksProvider>
               </MealPlanProvider>
 
               <Toaster
