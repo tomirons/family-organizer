@@ -14,7 +14,7 @@ export const useLists = () => {
             .get(url, {
                 params: {
                     include: 'tasks',
-                    filter: showCompletedTasks ? undefined : { incomplete: true }
+                    filter: !showCompletedTasks ? { completed: false } : undefined
                 }
             })
             .then((res) => res.data.data)
