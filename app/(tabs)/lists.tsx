@@ -15,11 +15,10 @@ export default function ListsTab() {
     return (
         <SafeAreaView className="h-full" edges={['top', 'left', 'right']}>
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-                <CreateNewList />
-
                 {data.map((list: any) => (
                     <TaskList key={list.id} list={list} />
                 ))}
+            <CreateNewList />
             </ScrollView>
         </SafeAreaView>
     )
