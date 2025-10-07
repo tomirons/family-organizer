@@ -11,6 +11,7 @@ import Icon from "~/components/ui/icon";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
+import { useTasksContext } from "~/contexts/tasks-context";
 import { useHouseholdMembers } from "~/hooks/household";
 import { createTask, useLists } from "~/hooks/tasks";
 import axios from "~/lib/axios";
@@ -20,6 +21,7 @@ import { HouseholdMember } from "~/types/household";
 
 export default function TaskList({ list }: { list: any }) {
     const { household } = useAuthenticationContext();
+    const { showCompletedTasks, toggleShowCompletedTasks } = useTasksContext();
     const { width } = Dimensions.get('window');
     const [showForm, setShowForm] = useState(false);
     const [showAssigneeSelect, setShowAssigneeSelect] = useState(false);
@@ -35,8 +37,8 @@ export default function TaskList({ list }: { list: any }) {
             <ScrollView contentContainerClassName="gap-y-2" stickyHeaderIndices={[0]}>
                 <View className="bg-background flex-row items-center justify-between">
                     <Text variant={'h3'}>{list.name}</Text>
-                    <Button variant={'ghost'}>
-                        <Text>Show/Hide completed</Text>
+                    <Button variant={'ghost'} onPress={toggleShowCompletedTasks}>
+                        <Text>{showCompletedTasks ? 'Hide' : 'Show'} completed</Text>
                     </Button>
                 </View>
                 {list.tasks.map((task: any) => (

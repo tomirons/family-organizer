@@ -1,18 +1,20 @@
 import { FormikValues } from "formik";
 import useSWR from "swr";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
+import { useTasksContext } from "~/contexts/tasks-context";
 import axios from "~/lib/axios";
 
-export const useLists = (includeIncomplete: boolean = true) => {
+export const useLists = () => {
     const { household } = useAuthenticationContext();
+    const { showCompletedTasks } = useTasksContext();
 
     return useSWR(
-        [`households/${household?.id}/lists`, includeIncomplete],
-        ([url, includeIncomplete]) => axios
+        [`households/${household?.id}/lists`, showCompletedTasks],
+        ([url, showCompletedTasks]) => axios
             .get(url, {
                 params: {
                     include: 'tasks',
-                    filter: includeIncomplete ? { incomplete: true } : undefined
+                    filter: showCompletedTasks ? undefined : { incomplete: true }
                 }
             })
             .then((res) => res.data.data)
