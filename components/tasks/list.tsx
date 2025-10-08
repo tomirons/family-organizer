@@ -13,11 +13,12 @@ import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { useTasksContext } from "~/contexts/tasks-context";
 import { useHouseholdMembers } from "~/hooks/household";
-import { createTask, useLists } from "~/hooks/tasks";
+import { createTask, useLists, useTasks } from "~/hooks/tasks";
 import axios from "~/lib/axios";
 import { handleFormValidation } from "~/lib/form";
 import { createTaskSchema } from "~/lib/validation";
 import { HouseholdMember } from "~/types/household";
+import { Skeleton } from "../ui/skeleton";
 
 export default function TaskList({ list }: { list: any }) {
     const { household } = useAuthenticationContext();
@@ -27,8 +28,9 @@ export default function TaskList({ list }: { list: any }) {
     const [showAssigneeSelect, setShowAssigneeSelect] = useState(false);
     const { data: members } = useHouseholdMembers();
     const { mutate: mutateLists } = useLists();
+    const { data: tasks, isLoading: isTasksLoading } = useTasks(list.id);
 
-    if (!household) {
+    if (!household || !tasks) {
         return null;
     }
 
@@ -41,33 +43,43 @@ export default function TaskList({ list }: { list: any }) {
                         <Text>{showCompletedTasks ? 'Hide' : 'Show'} completed</Text>
                     </Button>
                 </View>
-                {list.tasks.map((task: any) => (
-                    <TouchableOpacity
-                        key={task.id}
-                        onPress={() => {
-                            Alert.alert('Task Pressed', `You pressed on task: ${task.title}`);
-                        }}
-                    >
-                        <Card className="px-2 py-3">
-                            <CardContent className="px-2 flex-row items-center gap-3">
-                                <Checkbox
-                                    className="rounded-full size-5"
-                                    iconSize={10}
-                                    checked={task.is_completed}
-                                    onCheckedChange={function (checked: boolean): void {
-                                        axios
-                                            .post(`households/${household.id}/lists/${list.id}/tasks/${task.id}/${checked ? 'complete' : 'incomplete'}`)
-                                            .then(() => {
-                                                toast.success(`Marked as ${checked ? 'completed' : 'incomplete'}`);
-                                                mutateLists();
-                                            });
-                                    }}
-                                />
-                                <Text>{task.title}</Text>
-                            </CardContent>
-                        </Card>
-                    </TouchableOpacity>
-                ))}
+
+                {isTasksLoading ? (
+                    <>
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </>
+                ) : (
+                    tasks.map((task: any) => (
+                        <TouchableOpacity
+                            key={task.id}
+                            onPress={() => {
+                                Alert.alert('Task Pressed', `You pressed on task: ${task.title}`);
+                            }}
+                        >
+                            <Card className="px-2 py-3">
+                                <CardContent className="px-2 flex-row items-center gap-3">
+                                    <Checkbox
+                                        className="rounded-full size-5"
+                                        iconSize={10}
+                                        checked={task.is_completed}
+                                        onCheckedChange={function (checked: boolean): void {
+                                            axios
+                                                .post(`households/${household.id}/lists/${list.id}/tasks/${task.id}/${checked ? 'complete' : 'incomplete'}`)
+                                                .then(() => {
+                                                    toast.success(`Marked as ${checked ? 'completed' : 'incomplete'}`);
+                                                    mutateLists();
+                                                });
+                                        }}
+                                    />
+                                    <Text>{task.title}</Text>
+                                </CardContent>
+                            </Card>
+                        </TouchableOpacity>
+                    ))
+                )}
+
 
                 {showForm && (
                     <Animated.View
