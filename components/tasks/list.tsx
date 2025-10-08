@@ -13,8 +13,7 @@ import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { useTasksContext } from "~/contexts/tasks-context";
 import { useHouseholdMembers } from "~/hooks/household";
-import { createTask, useLists, useTasks } from "~/hooks/tasks";
-import axios from "~/lib/axios";
+import { createTask, markTaskAsComplete, markTaskAsIncomplete, useTasks } from "~/hooks/tasks";
 import { handleFormValidation } from "~/lib/form";
 import { createTaskSchema } from "~/lib/validation";
 import { HouseholdMember } from "~/types/household";
@@ -27,8 +26,7 @@ export default function TaskList({ list }: { list: any }) {
     const [showForm, setShowForm] = useState(false);
     const [showAssigneeSelect, setShowAssigneeSelect] = useState(false);
     const { data: members } = useHouseholdMembers();
-    const { mutate: mutateLists } = useLists();
-    const { data: tasks, isLoading: isTasksLoading } = useTasks(list.id);
+    const { data: tasks, isLoading: isTasksLoading, mutate } = useTasks(list.id);
 
     if (!household || !tasks) {
         return null;
@@ -65,11 +63,14 @@ export default function TaskList({ list }: { list: any }) {
                                         iconSize={10}
                                         checked={task.is_completed}
                                         onCheckedChange={function (checked: boolean): void {
-                                            axios
-                                                .post(`households/${household.id}/lists/${list.id}/tasks/${task.id}/${checked ? 'complete' : 'incomplete'}`)
+                                            (
+                                                checked
+                                                    ? markTaskAsComplete(household.id, list.id, task.id)
+                                                    : markTaskAsIncomplete(household.id, list.id, task.id)
+                                            )
                                                 .then(() => {
                                                     toast.success(`Marked as ${checked ? 'completed' : 'incomplete'}`);
-                                                    mutateLists();
+                                                    mutate();
                                                 });
                                         }}
                                     />
@@ -94,7 +95,7 @@ export default function TaskList({ list }: { list: any }) {
                             onSubmit={(values, formikHelpers) => {
                                 createTask(household.id, list.id, values)
                                     .then(() => {
-                                        mutateLists();
+                                        mutate();
                                         toast.success(`${true ? 'Task added successfully' : 'Task updated successfully'}`);
                                         formikHelpers.resetForm();
                                     })

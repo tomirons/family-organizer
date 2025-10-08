@@ -34,3 +34,7 @@ export const useTasks = (list: string) => {
 export const createTask = (household: string, list: string, values: FormikValues) => axios.post(`/households/${household}/lists/${list}/tasks`, values);
 
 export const updateTask = (household: string, list: string, id: string, values: FormikValues) => axios.put(`/households/${household}/lists/${list}/tasks/${id}`, values);
+
+export const markTaskAsComplete = (household: string, list: string, id: string) => axios.post(`/households/${household}/lists/${list}/tasks/${id}/complete`);
+
+export const markTaskAsIncomplete = (household: string, list: string, id: string) => axios.post(`/households/${household}/lists/${list}/tasks/${id}/incomplete`);
