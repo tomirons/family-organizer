@@ -1,25 +1,26 @@
 import { byPrefixAndName } from "@awesome.me/kit-5314873f9e/icons";
 import { Formik } from "formik";
 import { useState } from "react";
-import { Alert, Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
 import Animated, { FadeIn, FadeInDown, FadeInLeft, FadeInUp, FadeOut, FadeOutDown, FadeOutRight, FadeOutUp } from "react-native-reanimated";
 import { toast } from "sonner-native";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
-import { Checkbox } from "~/components/ui/checkbox";
+import { Card } from "~/components/ui/card";
 import Icon from "~/components/ui/icon";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { useTasksContext } from "~/contexts/tasks-context";
 import { useHouseholdMembers } from "~/hooks/household";
-import { createTask, markTaskAsComplete, markTaskAsIncomplete, useTasks } from "~/hooks/tasks";
+import { createTask, useTasks } from "~/hooks/tasks";
 import { handleFormValidation } from "~/lib/form";
 import { createTaskSchema } from "~/lib/validation";
 import { HouseholdMember } from "~/types/household";
+import { Task, List } from "~/types/task";
 import { Skeleton } from "../ui/skeleton";
+import TaskItem from "./item";
 
-export default function TaskList({ list }: { list: any }) {
+export default function TaskList({ list }: { list: List }) {
     const { household } = useAuthenticationContext();
     const { showCompletedTasks, toggleShowCompletedTasks } = useTasksContext();
     const { width } = Dimensions.get('window');
@@ -49,38 +50,10 @@ export default function TaskList({ list }: { list: any }) {
                         <Skeleton className="h-10 w-full" />
                     </>
                 ) : (
-                    tasks.map((task: any) => (
-                        <TouchableOpacity
-                            key={task.id}
-                            onPress={() => {
-                                Alert.alert('Task Pressed', `You pressed on task: ${task.title}`);
-                            }}
-                        >
-                            <Card className="px-2 py-3">
-                                <CardContent className="px-2 flex-row items-center gap-3">
-                                    <Checkbox
-                                        className="rounded-full size-5"
-                                        iconSize={10}
-                                        checked={task.is_completed}
-                                        onCheckedChange={function (checked: boolean): void {
-                                            (
-                                                checked
-                                                    ? markTaskAsComplete(household.id, list.id, task.id)
-                                                    : markTaskAsIncomplete(household.id, list.id, task.id)
-                                            )
-                                                .then(() => {
-                                                    toast.success(`Marked as ${checked ? 'completed' : 'incomplete'}`);
-                                                    mutate();
-                                                });
-                                        }}
-                                    />
-                                    <Text>{task.title}</Text>
-                                </CardContent>
-                            </Card>
-                        </TouchableOpacity>
+                    tasks.map((task: Task) => (
+                        <TaskItem key={task.id} list={list.id} task={task} />
                     ))
                 )}
-
 
                 {showForm && (
                     <Animated.View
