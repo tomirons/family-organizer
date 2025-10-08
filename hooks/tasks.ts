@@ -1,5 +1,6 @@
 import { FormikValues } from "formik";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import { useAuthenticationContext } from "~/contexts/authentication-context";
 import { useTasksContext } from "~/contexts/tasks-context";
 import axios from "~/lib/axios";
@@ -34,6 +35,15 @@ export const useTasks = (list: string) => {
 export const createTask = (household: string, list: string, values: FormikValues) => axios.post(`/households/${household}/lists/${list}/tasks`, values);
 
 export const updateTask = (household: string, list: string, id: string, values: FormikValues) => axios.put(`/households/${household}/lists/${list}/tasks/${id}`, values);
+
+export const useMarkTaskAs = (list: string) => {
+    const { household } = useAuthenticationContext();
+
+    return useSWRMutation(
+        `/households/${household?.id}/lists/${list}/tasks`,
+        (url: string, { arg }: { arg: { id: string, checked: boolean} }) => axios.post(`${url}/${arg.id}/${arg.checked ? 'complete' : 'incomplete'}`)
+    );
+};
 
 export const markTaskAsComplete = (household: string, list: string, id: string) => axios.post(`/households/${household}/lists/${list}/tasks/${id}/complete`);
 
