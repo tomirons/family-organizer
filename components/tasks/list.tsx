@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Dimensions, ScrollView, View } from "react-native";
 import Animated, { FadeInUp, FadeOutDown } from "react-native-reanimated";
 import { Button } from "~/components/ui/button";
@@ -9,13 +8,12 @@ import { useTasks } from "~/hooks/tasks";
 import { Task, List } from "~/types/task";
 import { Skeleton } from "../ui/skeleton";
 import TaskItem from "./item";
-import TaskForm from "./form";
+import { router } from "expo-router";
 
 export default function TaskList({ list }: { list: List }) {
     const { household } = useAuthenticationContext();
     const { showCompletedTasks, toggleShowCompletedTasks } = useTasksContext();
     const { width } = Dimensions.get('window');
-    const [showForm, setShowForm] = useState(false);
     const { data: tasks, isLoading: isTasksLoading } = useTasks(list.id);
 
     if (!household || !tasks) {
@@ -44,18 +42,14 @@ export default function TaskList({ list }: { list: List }) {
                     ))
                 )}
 
-                {showForm && (<TaskForm list={list.id} onCancel={() => setShowForm(false)} />)}
-
-                {!showForm && (
-                    <Animated.View
-                        entering={FadeInUp}
-                        exiting={FadeOutDown}
-                    >
-                        <Button variant={'secondary'} onPress={() => setShowForm(true)}>
-                            <Text>Add Task</Text>
-                        </Button>
-                    </Animated.View>
-                )}
+                <Animated.View
+                    entering={FadeInUp}
+                    exiting={FadeOutDown}
+                >
+                    <Button variant={'secondary'} onPress={() => router.push(`/tasks/form?list=${list.id}`)}>
+                        <Text>Add Task</Text>
+                    </Button>
+                </Animated.View>
             </ScrollView>
         </View>
     )
